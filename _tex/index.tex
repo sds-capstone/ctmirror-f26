@@ -185,10 +185,14 @@
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
 \hypersetup{
   pdftitle={La Palma Earthquakes},
   pdfauthor={Steve Purves; Rowan Cockett},
-  pdfkeywords={La Palma, Earthquakes},
+  pdfkeywords={\xmpquote{La Palma}, \xmpquote{Earthquakes}},
   colorlinks=true,
   linkcolor={blue},
   filecolor={Maroon},
@@ -199,7 +203,7 @@
 
 \title{La Palma Earthquakes}
 \author{Steve Purves \and Rowan Cockett}
-\date{2026-07-09}
+\date{2026-09-02}
 \begin{document}
 \maketitle
 \begin{abstract}
@@ -223,7 +227,7 @@ that this paper contributes?
 \end{quote}
 
 \textsubscript{Source:
-\href{https://sds-capstone.github.io/capstone-repo/index.qmd.html}{Article
+\href{https://sds-capstone.github.io/ctmirror-f26/index.qmd.html}{Article
 Notebook}}
 
 \protect\phantomsection\label{cell-fig-timeline}
@@ -240,11 +244,11 @@ Notebook}}
 \end{figure}%
 
 \textsubscript{Source:
-\href{https://sds-capstone.github.io/capstone-repo/index.qmd.html}{Article
+\href{https://sds-capstone.github.io/ctmirror-f26/index.qmd.html}{Article
 Notebook}}
 
 \textsubscript{Source:
-\href{https://sds-capstone.github.io/capstone-repo/index.qmd.html}{Article
+\href{https://sds-capstone.github.io/ctmirror-f26/index.qmd.html}{Article
 Notebook}}
 
 Based on data up to and including 1971, eruptions on La Palma happen
@@ -291,7 +295,7 @@ understand the data you are working with?
 Read a clean version of data:
 
 \textsubscript{Source:
-\href{https://sds-capstone.github.io/capstone-repo/index.qmd.html}{Article
+\href{https://sds-capstone.github.io/ctmirror-f26/index.qmd.html}{Article
 Notebook}}
 
 Create spatial plot:
@@ -311,7 +315,7 @@ since 2017}
 \end{figure}%
 
 \textsubscript{Source:
-\href{https://sds-capstone.github.io/capstone-repo/index.qmd.html}{Article
+\href{https://sds-capstone.github.io/ctmirror-f26/index.qmd.html}{Article
 Notebook}}
 
 Figure~\ref{fig-spatial-plot} shows the location of recent Earthquakes
