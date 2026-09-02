@@ -1,0 +1,54 @@
+on:
+  workflow_dispatch:
+  push:
+    branches: main
+
+name: Quarto Publish
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+      R_KEEP_PKG_SOURCE: yes
+
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          upgrade: 'TRUE'
+          packages:
+            any::remotes
+            any::tidyverse
+            any::here
+            any::markdown
+            any::knitr
+            any::git2r
+
+      - name: Install GitHub packages
+        run: |
+          Rscript -e 'remotes::install_github("beanumber/chchchanges")'
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: pre-release
+          tinytex: true
+
+      - name: Render and Publish
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+          path: quarto-manuscript
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,17 @@
+project:
+  type: manuscript
+  render: 
+    - index.qmd
+    - README.Rmd
+
+execute:
+  freeze: auto
+
+format:
+  html:
+    toc: true
+    comments:
+      hypothesis: true
+  pdf: 
+    keep-tex: true
+    fig-height: 3

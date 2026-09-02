@@ -1,0 +1,52 @@
+on:
+  workflow_dispatch:
+  push:
+    branches: main
+
+name: Analyze Repository
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+    
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          upgrade: 'TRUE'
+          packages:
+            any::remotes
+            any::markdown
+            any::rmarkdown
+            any::dplyr
+            any::git2r
+
+      - name: Install chchchanges
+        run: |
+          Rscript -e 'remotes::install_github("beanumber/chchchanges")'
+
+      # Render READEME.md using rmarkdown
+      - name: render README
+        run: |
+          Rscript -e 'rmarkdown::render(".chchchanges/README.Rmd", output_format = "md_document")'
+  
+      - name: Git Auto Commit
+        uses: stefanzweifel/git-auto-commit-action@v5.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

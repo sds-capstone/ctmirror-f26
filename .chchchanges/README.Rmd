@@ -1,0 +1,28 @@
+---
+output:
+  github_document
+---
+
+## Repository analysis via `chchchanges`
+
+This is `chchchanges` version `r packageVersion("chchchanges")`.
+
+The current time is `r format(Sys.time(), "%B %e, %Y, %H:%M:%S")`
+
+Here is a summary of the commits made to this repository:
+
+```{r tbl}
+chchchanges::summarize_commits() |>
+  knitr::kable()
+```
+
+The following analysis is automated via [Google Gemini](https://en.wikipedia.org/wiki/Gemini_(chatbot)) and the [`chchchanges`](https://github.com/beanumber/chchchanges) package. 
+
+```{r llm, results='asis'}
+chchchanges::summarize_git_with_llm(
+  show_prompts = TRUE, 
+  user_prompt = "Also assign letter grades to each contributor. "
+) |>
+  markdown::mark()
+```
+

@@ -1,0 +1,23 @@
+# derivative files
+*/index_files/*
+*/_freeze/*
+*/README.html
+*/README_files/*
+*/.quarto/
+*/_manuscript
+*/site_libs/*
+README.html
+README_files/*
+
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+
+.Rproj.user
+.Rhistory
+.Rdata
+.httr-oauth
+.DS_Store
+
+/.quarto/
+**/*.quarto_ipynb
