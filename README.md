@@ -2,7 +2,7 @@
 
 ## Team members
 
-- Sophia Smith...
+- Bayansulu Tulepbayeva
  
 ## Team rules
 
