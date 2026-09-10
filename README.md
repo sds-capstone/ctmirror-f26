@@ -2,7 +2,7 @@
 
 ## Team members
 
-- Bayansulu Tulepbayeva
+- Bayansulu Tulepbayeva (Tulip)
  
 ## Team rules
 
