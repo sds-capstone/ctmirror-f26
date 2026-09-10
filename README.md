@@ -3,6 +3,8 @@
 ## Team members
 
 - Zoe Khan
+- Nicole Choi
+- Bayansulu Tulepbayeva (Tulip)
  
 ## Team rules
 
