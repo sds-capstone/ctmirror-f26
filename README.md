@@ -2,7 +2,7 @@
 
 ## Team members
 
-- Sophia Smith...
+- Nicole Choi
  
 ## Team rules
 
