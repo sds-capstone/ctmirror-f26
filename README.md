@@ -2,7 +2,7 @@
 
 ## Team members
 
-- Sophia Smith...
+- Zoe Khan
  
 ## Team rules
 
