@@ -2,6 +2,7 @@
 
 ## Team members
 
+- Nicole Choi
 - Bayansulu Tulepbayeva (Tulip)
  
 ## Team rules
