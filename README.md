@@ -5,6 +5,7 @@
 - Zoe Khan
 - Nicole Choi
 - Bayansulu Tulepbayeva (Tulip)
+- Ellie Zdancewic
  
 ## Team rules
 
