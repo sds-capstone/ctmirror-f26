@@ -2,7 +2,7 @@
 
 ## Team members
 
-- Zoe Khan
+- Zoe Khan (Sprint 1 Product Manager)
 - Nicole Choi
 - Bayansulu Tulepbayeva (Tulip)
 - Ellie Zdancewic
