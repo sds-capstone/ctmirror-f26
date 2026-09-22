@@ -2,13 +2,14 @@
 
 ## Team members
 
-- Zoe Khan (Sprint 1 Product Manager)
+- Zoe Khan (Sprint 1 Product Owner)
 - Nicole Choi
 - Bayansulu Tulepbayeva (Tulip)
 - Ellie Zdancewic
  
 ## Team rules
 
+1. 3rd weekly stand-up is Friday 4PM
 1. AI Norms: We will only use AI as the LAST resort. We also believe there is a distinction between creating with AI vs. creating AI (ie. in the form of a chatbot for our dashboard), where the latter may be more justified. At the end of the day, we must be able to stand behind our own work. We collectively want to do as much of our own work as possible, and be transparent about any AI use that does occur. 
 
 2. Group Meetings: For our baseline third standup meeting, we will have it in-person with the caveat that we can switch to Zoom depending on team members’ needs (ie. if one member is travelling). For meetings with our project sponsor, we will meet over Zoom and prepare a Meeting Agenda each week. Many members of the group also enjoy coworking, so we will work together on coding and other project tasks as much as time allows.
