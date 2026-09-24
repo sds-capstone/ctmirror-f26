@@ -5,7 +5,7 @@
 - Zoe Khan (Sprint 1 Product Owner)
 - Nicole Choi
 - Bayansulu Tulepbayeva (Tulip)
-- Ellie Zdancewic
+- Ellie (Eleanor) Zdancewic
  
 ## Team rules
 
