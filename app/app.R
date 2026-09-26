@@ -3,13 +3,14 @@ library(bslib)
 library(tidycensus)
 library(tidyverse)
 
-# Define UI for app that draws a histogram ----
+# Define UI for app 
 ui <- page_sidebar(
   # App title ----
   title = "Connecticut Mirror Data Dashboard",
 
-  # Output: Histogram ----
-  plotOutput(outputId = "ctplot")
+  # Output: 
+  plotOutput(outputId = "ctplot"),
+  plotOutput(outputId = "ctmap_static")
 )
 
 # Data Download
@@ -21,12 +22,11 @@ ct <- get_acs(geography = "county subdivision",
               geometry = TRUE) |>
   mutate(town_name = sub(" town.*", "", NAME))
 
-# Define server logic required to draw a histogram ----
+# Define server logic 
 
 server <- function(input, output) {
 
   output$ctplot <- renderPlot({
-
     ct |>
       slice_max(estimate, n = 10) |>
       ggplot(aes(x = estimate, y = reorder(town_name, estimate))) +
@@ -38,6 +38,16 @@ server <- function(input, output) {
           y = "",
           x = "ACS estimate (bars represent margin of error)")
   })
+
+  output$ctmap_static <- renderPlot({
+    ggplot(ct, aes(fill = estimate)) +
+      geom_sf() + 
+      theme_void() +
+      labs(fill = "Median household\nincome ($)",
+          title = "Median Household Income in CT Towns",
+          caption = "2020-2024 ACS, US Census Bureau")
+  })
+
 }
 
 shinyApp(ui = ui, server = server)
