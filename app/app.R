@@ -2,6 +2,7 @@ library(shiny)
 library(bslib)
 library(tidycensus)
 library(tidyverse)
+library(leaflet)
 
 # Define UI for app 
 ui <- page_sidebar(
@@ -10,7 +11,8 @@ ui <- page_sidebar(
 
   # Output: 
   plotOutput(outputId = "ctplot"),
-  plotOutput(outputId = "ctmap_static")
+  plotOutput(outputId = "ctmap_static"),
+  leafletOutput(outputId = "ctmap_dynamic")
 )
 
 # Data Download
@@ -48,6 +50,24 @@ server <- function(input, output) {
           caption = "2020-2024 ACS, US Census Bureau")
   })
 
+  output$ctmap_dynamic <- renderLeaflet({
+    pal <- colorNumeric(
+      palette = "magma",
+      domain = ct$estimate)
+    leaflet() |>
+      addProviderTiles(providers$OpenStreetMap) |>
+      addPolygons(data = ct,
+            color = ~pal(estimate),
+            weight = 0.5,
+            smoothFactor = 0.2,
+            fillOpacity = 0.5,
+            label = ~paste0(town_name, " ", estimate)) |>
+      addLegend(
+        position = "bottomright",
+        pal = pal,
+        values = ct$estimate,
+        title = "Median houshold income ($)")
+  })
 }
 
 shinyApp(ui = ui, server = server)
