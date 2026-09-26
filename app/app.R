@@ -17,7 +17,9 @@ ui <- page_sidebar(
 ct <- get_acs(geography = "county subdivision",
               variables = c(medincome = "B19013_001"),
               state = "CT",
-              year = 2024)
+              year = 2024,
+              geometry = TRUE) |>
+  mutate(town_name = sub(" town.*", "", NAME))
 
 # Define server logic required to draw a histogram ----
 
@@ -27,10 +29,10 @@ server <- function(input, output) {
 
     ct |>
       slice_max(estimate, n = 10) |>
-      mutate(NAME = gsub("County, Connecticut", "", NAME)) |>
-      ggplot(aes(x = estimate, y = reorder(NAME, estimate))) +
+      ggplot(aes(x = estimate, y = reorder(town_name, estimate))) +
       geom_errorbarh(aes(xmin = estimate - moe, xmax = estimate + moe)) +
       geom_point(color = "#761080", size = 3) +
+      theme_minimal() +
       labs(title = "CT Towns with Highest Median Household Income",
           subtitle = "2020-2024 American Community Survey",
           y = "",
