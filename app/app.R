@@ -12,22 +12,26 @@ ui <- page_sidebar(
   plotOutput(outputId = "ctplot")
 )
 
-# Define server logic required to draw a histogram ----
-server <- function(input, output) {
+# Data Download
 
-  output$ctplot <- renderPlot({
-
-    ct <- get_acs(geography = "county",
+ct <- get_acs(geography = "county subdivision",
               variables = c(medincome = "B19013_001"),
               state = "CT",
               year = 2024)
 
+# Define server logic required to draw a histogram ----
+
+server <- function(input, output) {
+
+  output$ctplot <- renderPlot({
+
     ct |>
-      mutate(NAME = gsub(" County, Connecticut", "", NAME)) |>
+      slice_max(estimate, n = 10) |>
+      mutate(NAME = gsub("County, Connecticut", "", NAME)) |>
       ggplot(aes(x = estimate, y = reorder(NAME, estimate))) +
       geom_errorbarh(aes(xmin = estimate - moe, xmax = estimate + moe)) +
       geom_point(color = "#761080", size = 3) +
-      labs(title = "Household income by county in Connecticut",
+      labs(title = "CT Towns with Highest Median Household Income",
           subtitle = "2020-2024 American Community Survey",
           y = "",
           x = "ACS estimate (bars represent margin of error)")
