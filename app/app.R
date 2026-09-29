@@ -3,16 +3,19 @@ library(bslib)
 library(tidycensus)
 library(tidyverse)
 library(leaflet)
+options(tigris_use_cache = TRUE)
 
 # Define UI for app 
 ui <- page_sidebar(
   # App title ----
   title = "Connecticut Mirror Data Dashboard",
+  fillable = FALSE,
 
   # Output: 
   plotOutput(outputId = "ctplot"),
   plotOutput(outputId = "ctmap_static"),
-  leafletOutput(outputId = "ctmap_dynamic")
+  leafletOutput(outputId = "ctmap_dynamic"),
+  card(max_height = 350, tableOutput(outputId = "town_table"))
 )
 
 # Data Download
@@ -44,8 +47,10 @@ server <- function(input, output) {
   output$ctmap_static <- renderPlot({
     ggplot(ct, aes(fill = estimate)) +
       geom_sf() + 
+      scale_fill_viridis_c(option = "magma", direction = -1,
+                           guide = guide_colourbar(reverse = TRUE)) +
       theme_void() +
-      labs(fill = "Median household\nincome ($)",
+      labs(fill = "Median Household\nIncome ($)",
           title = "Median Household Income in CT Towns",
           caption = "2020-2024 ACS, US Census Bureau")
   })
@@ -53,21 +58,30 @@ server <- function(input, output) {
   output$ctmap_dynamic <- renderLeaflet({
     pal <- colorNumeric(
       palette = "magma",
-      domain = ct$estimate)
+      domain = ct$estimate,
+      reverse = TRUE)
     leaflet() |>
       addProviderTiles(providers$OpenStreetMap) |>
       addPolygons(data = ct,
             color = ~pal(estimate),
             weight = 0.5,
             smoothFactor = 0.2,
-            fillOpacity = 0.5,
+            fillOpacity = 0.75,
             label = ~paste0(town_name, " ", estimate)) |>
       addLegend(
         position = "bottomright",
         pal = pal,
         values = ct$estimate,
-        title = "Median houshold income ($)")
+        title = "Median Household Income ($)")
   })
+
+  output$town_table <- renderTable({
+    ct |>
+      sf::st_drop_geometry() |>
+      arrange(desc(estimate)) |>
+      select(Town = town_name, `Median Household Income ($)` = estimate)
+  }, digits = 0)
+  
 }
 
 shinyApp(ui = ui, server = server)
