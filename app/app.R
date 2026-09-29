@@ -47,7 +47,7 @@ server <- function(input, output) {
   output$ctmap_static <- renderPlot({
     ggplot(ct, aes(fill = estimate)) +
       geom_sf() + 
-      scale_fill_viridis_c(option = "magma", direction = -1,
+      scale_fill_viridis_c(option = "magma",
                            guide = guide_colourbar(reverse = TRUE)) +
       theme_void() +
       labs(fill = "Median Household\nIncome ($)",
@@ -58,8 +58,7 @@ server <- function(input, output) {
   output$ctmap_dynamic <- renderLeaflet({
     pal <- colorNumeric(
       palette = "magma",
-      domain = ct$estimate,
-      reverse = TRUE)
+      domain = ct$estimate)
     leaflet() |>
       addProviderTiles(providers$OpenStreetMap) |>
       addPolygons(data = ct,
