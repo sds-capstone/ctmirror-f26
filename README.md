@@ -28,9 +28,10 @@
     2. Creation of a separate branch linked with this Issue 
     3. Frequent incremental commits of the work needed to address this Issue, pushed to the branch 
     4. When the change is tested and ready to be merged, the author will create a Pull Request. NEVER push to main.
-    5. One other member of the group will review the change and when the change is approved, the author can merge 
+    5. At least one other member of the group will review the change. If no comments or changes are necessary, the reviewer can approve and merge. If the reviewer leaves any comments or requests any changes, the author reviews the changes and merges. 
+    6. Large Pull Requests should be reviewed by all members of the team. 
         1. Merge conflicts are a fact of life will be addressed if necessary 
-    6. Once the pull request is officially merged, the branch is deleted and the Issue is marked as complete. 
+    7. Once the pull request is officially merged, the branch is deleted and the Issue is marked as complete. 
 
 
 ## Final paper
