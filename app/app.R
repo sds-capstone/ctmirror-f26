@@ -39,7 +39,8 @@ ui <- page_sidebar(
   plotOutput(outputId = "ctplot"),
   plotOutput(outputId = "ctmap_static"),
   leafletOutput(outputId = "ctmap_dynamic"),
-  card(max_height = 350, tableOutput(outputId = "town_table"))
+  card(max_height = 350, tableOutput(outputId = "town_table")),
+  downloadButton(outputId = "download_table", label = "Download Data")
 )
 
 # Define server logic 
@@ -113,12 +114,21 @@ server <- function(input, output) {
         title = var_label())
   })
 
+  # Output table
   output$town_table <- renderTable({
     ct() |>
       sf::st_drop_geometry() |>
       arrange(desc(estimate)) |>
       select(Town = town_name, Estimate = estimate)
   }, digits = 0)
+
+  # Download data button
+  output$download_table <- downloadHandler(
+    filename = function() {paste0(gsub(" ", "_", var_label()), ".csv")},
+    content = function(file) {
+        clean_data = sf::st_drop_geometry(ct())
+      write.csv(clean_data, file)}
+  )
   
 }
 
