@@ -101,7 +101,11 @@ server <- function(input, output) {
             weight = 0.5,
             smoothFactor = 0.2,
             fillOpacity = 0.75,
-            label = ~paste0(town_name, " ", estimate)) |>
+            label = ~paste0(town_name, " ", estimate),
+            highlightOptions = highlightOptions(
+              color = "red",
+              weight = 2,
+              bringToFront = TRUE)) |>
       addLegend(
         position = "bottomright",
         pal = pal,
