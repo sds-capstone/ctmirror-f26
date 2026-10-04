@@ -103,10 +103,13 @@ server <- function(input, output) {
   })
 
   output$town_table <- renderTable({
+    heading <- if (grepl("\\$", var_label())) "Estimate ($)" else "Estimate"
     ct() |>
       sf::st_drop_geometry() |>
       arrange(desc(estimate)) |>
-      select(Town = town_name, Estimate = estimate)
+      mutate(Estimate = scales::comma(estimate)) |>
+      select(Town = town_name, Estimate = Estimate) |>
+      setNames(c("Town", heading))
   }, digits = 0)
   
 }
