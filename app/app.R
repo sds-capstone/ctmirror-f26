@@ -36,7 +36,6 @@ ui <- page_sidebar(
   ),
 
   # Output: 
-  plotOutput(outputId = "ctplot"),
   plotOutput(outputId = "ctmap_static"),
   leafletOutput(outputId = "ctmap_dynamic"),
   card(max_height = 350, tableOutput(outputId = "town_table"))
@@ -65,20 +64,6 @@ server <- function(input, output) {
       mutate(town_name = sub(" town.*", "", NAME))
   })
 
-  output$ctplot <- renderPlot({
-    ct() |>
-      slice_max(estimate, n = 10) |>
-      ggplot(aes(x = estimate, y = reorder(town_name, estimate))) +
-      geom_errorbar(aes(xmin = estimate - moe, xmax = estimate + moe),
-              orientation = "y") +
-      geom_point(color = "#761080", size = 3) +
-      theme_minimal() +
-      labs(title = paste("CT Towns with Highest", var_label()),
-          subtitle = "2020-2024 American Community Survey",
-          y = "",
-          x = "ACS estimate (bars represent margin of error)")
-  })
-
   output$ctmap_static <- renderPlot({
     ggplot(ct(), aes(fill = estimate)) +
       geom_sf() + 
@@ -94,6 +79,7 @@ server <- function(input, output) {
     pal <- colorNumeric(
       palette = "magma",
       domain = ct()$estimate)
+    money <- if (grepl("\\$", var_label())) "$" else ""
     leaflet() |>
       addProviderTiles(providers$OpenStreetMap) |>
       addPolygons(data = ct(),
@@ -101,7 +87,7 @@ server <- function(input, output) {
             weight = 0.5,
             smoothFactor = 0.2,
             fillOpacity = 0.75,
-            label = ~paste0(town_name, " ", estimate),
+            label = ~paste0(town_name, " ",  money, scales::comma(estimate)),
             highlightOptions = highlightOptions(
               color = "red",
               weight = 2,
@@ -110,7 +96,10 @@ server <- function(input, output) {
         position = "bottomright",
         pal = pal,
         values = ct()$estimate,
-        title = var_label())
+        title = var_label(),
+        labFormat = labelFormat(
+          prefix = money,
+          big.mark = ","))
   })
 
   output$town_table <- renderTable({
