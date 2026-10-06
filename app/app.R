@@ -6,6 +6,12 @@ library(leaflet)
 options(tigris_use_cache = TRUE)
 
 # Beats and variables
+v <- load_variables(2024, "acs5", cache = TRUE) |>
+  mutate(table = str_extract(name, "^[^_]+"),
+         beat = NA_character_,
+         var_label = NA_character_,)
+write_csv(v, "acs5_2024_variables.csv")
+
 beats <- list(
   "Housing" = c("Median home value ($)" = "B25077_001",
                 "Median gross rent ($)" = "B25064_001"),
