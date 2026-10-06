@@ -3,7 +3,7 @@
 ## Team members
 
 - Zoe Khan (Sprint 1 Product Owner)
-- Nicole Choi
+- Nicole Choi (Sprint 2 Product Owner)
 - Bayansulu Tulepbayeva (Tulip)
 - Ellie (Eleanor) Zdancewic
  
