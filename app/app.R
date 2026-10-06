@@ -80,15 +80,19 @@ server <- function(input, output) {
     pal <- colorNumeric(
       palette = "magma",
       domain = ct()$estimate)
+    pal_reverse <- colorNumeric(
+      palette = "magma",
+      domain = ct()$estimate,
+      reverse = TRUE)
     money <- if (grepl("\\$", var_label())) "$" else ""
     leaflet() |>
       addProviderTiles(providers$OpenStreetMap) |>
       addPolygons(data = ct(),
-            color = ~pal(estimate),
+            color = ~pal_reverse(estimate),
             weight = 0.5,
             smoothFactor = 0.2,
             fillOpacity = 0.75,
-            label = ~paste0(town_name, " ",  money, scales::comma(estimate)),
+            label = ~paste0(town_name, ": ",  money, scales::comma(estimate)),
             highlightOptions = highlightOptions(
               color = "red",
               weight = 2,
@@ -100,7 +104,8 @@ server <- function(input, output) {
         title = var_label(),
         labFormat = labelFormat(
           prefix = money,
-          big.mark = ","))
+          big.mark = ",",
+          transform = function(x) sort(x, decreasing = TRUE)))
   })
 
   # Output table
