@@ -36,7 +36,6 @@ ui <- page_sidebar(
   ),
 
   # Output: 
-  plotOutput(outputId = "ctmap_static"),
   leafletOutput(outputId = "ctmap_dynamic"),
   card(max_height = 350, tableOutput(outputId = "town_table")),
   downloadButton(outputId = "download_table", label = "Download Data")
@@ -63,17 +62,6 @@ server <- function(input, output) {
             year = 2024,
             geometry = TRUE) |>
       mutate(town_name = sub(" town.*", "", NAME))
-  })
-
-  output$ctmap_static <- renderPlot({
-    ggplot(ct(), aes(fill = estimate)) +
-      geom_sf() + 
-      scale_fill_viridis_c(option = "magma",
-                           guide = guide_colourbar(reverse = TRUE)) +
-      theme_void() +
-      labs(fill = str_wrap(var_label(), 20),
-          title = paste(var_label(), "in CT Towns"),
-          caption = "2020-2024 ACS, US Census Bureau")
   })
 
   output$ctmap_dynamic <- renderLeaflet({
