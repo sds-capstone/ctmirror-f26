@@ -37,6 +37,7 @@ ui <- page_sidebar(
 
   # Output: 
   leafletOutput(outputId = "ctmap_dynamic"),
+  plotOutput(outputId = "time_series"),
   card(max_height = 350, tableOutput(outputId = "town_table")),
   downloadButton(outputId = "download_table", label = "Download Data")
 )
@@ -62,6 +63,25 @@ server <- function(input, output) {
             year = 2024,
             geometry = TRUE) |>
       mutate(town_name = sub(" town.*", "", NAME))
+  })
+
+  # Time-Series Plot 
+  # creating a blank dataframe 
+
+  time_series_data <- reactive({
+    
+    empty <- data.frame(year=double(), var_name=double())
+
+  # looping through years and calling API 
+  for (x in 2009:2024) {
+    api_df <- get_acs(geography = "state", # state-level geography 
+                variables = input$variable,
+                state = "CT", 
+                year = x) 
+    empty <- empty |> 
+        add_row(year=x, var_name=api_df$estimate)
+  }
+  empty 
   })
 
   output$ctmap_dynamic <- renderLeaflet({
@@ -95,6 +115,9 @@ server <- function(input, output) {
           big.mark = ",",
           transform = function(x) sort(x, decreasing = TRUE)))
   })
+
+  # Time-Series Visualization 
+  output$time_series <- renderPlot({ ggplot(time_series_data(), aes(x=year, y=var_name)) + geom_line() })
 
   # Output table
   output$town_table <- renderTable({
