@@ -73,16 +73,22 @@ server <- function(input, output) {
     
     empty <- data.frame(year=double(), var_name=double())
 
-  # looping through years and calling API 
-  for (x in 2009:2024) {
-    api_df <- get_acs(geography = "state", # state-level geography 
-                variables = input$variable,
-                state = "CT", 
-                year = x) 
-    empty <- empty |> 
-        add_row(year=x, var_name=api_df$estimate)
-  }
-  empty 
+    # looping through years and calling API 
+    for (x in 2009:2024) {
+      api_df <- tryCatch(
+        get_acs(geography = "state", # state-level geography 
+                  variables = input$variable,
+                  state = "CT", 
+                  year = x), 
+        error = function(e) {
+                  message("Skipping ", x, ": ", conditionMessage(e))
+                  NULL
+                }) 
+      if (is.null(api_df)) next
+      empty <- empty |> 
+          add_row(year=x, var_name=api_df$estimate)
+    }
+    empty 
   })
 
   output$ctmap_dynamic <- renderLeaflet({
