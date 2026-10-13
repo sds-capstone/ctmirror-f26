@@ -3,6 +3,7 @@ library(bslib)
 library(tidycensus)
 library(tidyverse)
 library(leaflet)
+library(scales)
 options(tigris_use_cache = TRUE)
 
 # Beats and variables
@@ -117,7 +118,13 @@ server <- function(input, output) {
   })
 
   # Time-Series Visualization 
-  output$time_series <- renderPlot({ ggplot(time_series_data(), aes(x=year, y=var_name)) + geom_line() })
+  output$time_series <- renderPlot({ 
+    ggplot(time_series_data(), aes(x=year, y=var_name)) + 
+      geom_line(linewidth = 0.8) +
+      theme_minimal() +
+      labs(title = paste0("Statewide Summary: ", var_label()), x = "Year", y = var_label()) +
+      scale_y_continuous(labels = label_comma(), limits = c(0,NA))
+  })
 
   # Output table
   output$town_table <- renderTable({
