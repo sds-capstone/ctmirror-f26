@@ -4,9 +4,18 @@ library(tidycensus)
 library(tidyverse)
 library(leaflet)
 library(scales)
+library(readxl)
 options(tigris_use_cache = TRUE)
 
 # Beats and variables
+file <- "acs5_2024_variables.xlsx"
+
+table_beats <- read_excel(file, sheet = "Variable Coding") |>
+  select(table, concept, beat, priority = `high priority`) |>
+  separate_longer_delim(beat, delim = ",") |>
+  mutate(beat = str_to_title(str_trim(beat))) |>
+  distinct()
+
 beats <- list(
   "Housing" = c("Median home value ($)" = "B25077_001",
                 "Median gross rent ($)" = "B25064_001"),
