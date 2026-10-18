@@ -4,9 +4,11 @@ library(tidycensus)
 library(tidyverse)
 library(leaflet)
 library(scales)
+source(here::here("app", "ingest.R"))
 options(tigris_use_cache = TRUE)
 
 # Beats and variables
+
 beats <- list(
   "Housing" = c("Median home value ($)" = "B25077_001",
                 "Median gross rent ($)" = "B25064_001"),
