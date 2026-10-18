@@ -39,11 +39,29 @@ ui <- page_sidebar(
     uiOutput("variable_ui")
   ),
 
+  navset_tab(
+    nav_panel(
+      "Home", 
+      "", 
+      leafletOutput(outputId = "ctmap_dynamic"),
+      plotly::plotlyOutput(outputId = "time_series"),
+      ),
+    nav_panel(
+      "Advanced", "Coming soon!"
+    ),
+    nav_panel(
+      "Find variables", "Coming soon!"
+    ),
+    nav_panel(
+      "Data", "", 
+      card(max_height = 350, tableOutput(outputId = "town_table")),
+      downloadButton(outputId = "download_table", label = "Download Data")
+    )
+  )
   # Output: 
-  leafletOutput(outputId = "ctmap_dynamic"),
-  plotly::plotlyOutput(outputId = "time_series"),
-  card(max_height = 350, tableOutput(outputId = "town_table")),
-  downloadButton(outputId = "download_table", label = "Download Data")
+  
+  #,
+  #
 )
 
 # Define server logic 
