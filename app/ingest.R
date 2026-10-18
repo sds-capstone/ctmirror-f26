@@ -15,3 +15,9 @@ vars <- read_excel(file, sheet = "All Variables") |>
                               str_remove("^Estimate!!") |>
                               str_remove_all(":| ?--") |>
                               str_replace_all("!!", " > ")))
+
+table_beats <- vars |>
+  distinct(table, beat = beats) |>
+  separate_longer_delim(beat, delim = ",") |>
+  mutate(beat = str_to_lower(str_trim(beat))) |>
+  filter(beat != "meta")
