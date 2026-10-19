@@ -4,6 +4,7 @@ library(tidycensus)
 library(tidyverse)
 library(leaflet)
 library(scales)
+library(plotly)
 source(here::here("app", "ingest.R"))
 options(tigris_use_cache = TRUE)
 
@@ -40,7 +41,7 @@ ui <- page_sidebar(
 
   # Output: 
   leafletOutput(outputId = "ctmap_dynamic"),
-  plotOutput(outputId = "time_series"),
+  plotly::plotlyOutput(outputId = "time_series"),
   card(max_height = 350, tableOutput(outputId = "town_table")),
   downloadButton(outputId = "download_table", label = "Download Data")
 )
@@ -73,7 +74,7 @@ server <- function(input, output) {
 
   time_series_data <- reactive({
     
-    empty <- data.frame(year=double(), var_name=double())
+    empty <- data.frame(year=double(), var_name=double(), tooltip = character())
 
     # looping through years and calling API 
     for (x in 2009:2024) {
@@ -88,7 +89,7 @@ server <- function(input, output) {
                 }) 
       if (is.null(api_df)) next
       empty <- empty |> 
-          add_row(year=x, var_name=api_df$estimate)
+          add_row(year=x, var_name=api_df$estimate, tooltip = paste0(year, ": ", api_df$estimate))
     }
     empty 
   })
@@ -126,12 +127,15 @@ server <- function(input, output) {
   })
 
   # Time-Series Visualization 
-  output$time_series <- renderPlot({ 
-    ggplot(time_series_data(), aes(x=year, y=var_name)) + 
+  output$time_series <- renderPlotly({ 
+    g <- suppressWarnings(ggplot(time_series_data(), aes(x=year, y=var_name)) + 
       geom_line(linewidth = 0.8) +
+      geom_point(aes(text = tooltip)) +
       theme_minimal() +
       labs(title = paste0("Statewide Summary: ", var_label()), x = "Year", y = var_label()) +
-      scale_y_continuous(labels = label_comma(), limits = c(0,NA))
+      scale_y_continuous(labels = label_comma(), limits = c(0,NA)))
+
+    plotly::ggplotly(g, tooltip = "text")
   })
 
   # Output table
