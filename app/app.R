@@ -87,11 +87,12 @@ server <- function(input, output) {
     empty <- data.frame(year=double(), var_name=double(), tooltip = character())
 
     # looping through years and calling API 
-    for (x in 2009:2024) {
+    for (x in 2005:2024) {
       api_df <- tryCatch(
         get_acs(geography = "state", # state-level geography 
                   variables = input$variable,
                   state = "CT", 
+                  survey = "acs1",
                   year = x), 
         error = function(e) {
                   message("Skipping ", x, ": ", conditionMessage(e))
