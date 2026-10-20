@@ -8,25 +8,17 @@ library(plotly)
 source(here::here("app", "ingest.R"))
 options(tigris_use_cache = TRUE)
 
-# Beats and variables
+# Beats and variables (WIP: now read from the sheet, one variable per ACS table)
+coding <- vars |>
+  separate_longer_delim(beats, delim = ",") |> # split column into rows
+  filter(str_detect(name, "_001")) |>
+  mutate(beats = str_to_title(str_squish(beats)),
+         label = if_else(str_detect(tolower(paste(label, var_label)), "dollars"),
+                         paste0(var_label, " ($)"), var_label))  # "($)" keeps the money formatting working
 
-beats <- list(
-  "Housing" = c("Median home value ($)" = "B25077_001",
-                "Median gross rent ($)" = "B25064_001"),
-  "Education" = c("Bachelor's degree (count)" = "B15003_022"),
-  "Race" = c("White alone (count)"                   = "B02001_002",
-           "Black alone (count)"                   = "B02001_003",
-           "American Indian/Alaska Native alone (count)" = "B02001_004",
-           "Asian alone (count)"                   = "B02001_005",
-           "Native Hawaiian/Pacific Islander alone (count)" = "B02001_006",
-           "Some other race alone (count)"         = "B02001_007",
-           "Two or more races (count)"             = "B02001_008",
-           "Hispanic or Latino, any race (count)"  = "B03003_003"),
-  "Language" = c("Speak Spanish at home (count)" = "C16001_003"),
-  "Income" = c("Median household income ($)" = "B19013_001",
-               "Per capita income ($)" = "B19301_001")
-)
+beats <- split(setNames(coding$name, coding$label), coding$beats)
 all_vars <- unlist(unname(beats))
+all_vars <- all_vars[!duplicated(all_vars)]
 
 # Define UI for app 
 ui <- page_sidebar(
