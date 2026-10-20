@@ -9,15 +9,14 @@ source(here::here("app", "ingest.R"))
 options(tigris_use_cache = TRUE)
 
 # Beats and variables (WIP: now read from the sheet, one variable per ACS table)
-coding <- readxl::read_excel(here::here("acs5_2024_variables.xlsx"),
-                             sheet = "Variable Coding", col_types = "text") |>
-  filter(!str_detect(table, "PR$")) |> # Puerto Rico
-  separate_longer_delim(beat, delim = ",") |> # split column into rows
-  mutate(beat = str_to_title(str_squish(beat)),
-         label = if_else(str_detect(tolower(paste(label, concept)), "dollars"),
-                         paste0(concept, " ($)"), concept))  # "($)" keeps the money formatting working
+coding <- vars |>
+  separate_longer_delim(beats, delim = ",") |> # split column into rows
+  filter(str_detect(name, "_001")) |>
+  mutate(beats = str_to_title(str_squish(beats)),
+         label = if_else(str_detect(tolower(paste(label, var_label)), "dollars"),
+                         paste0(var_label, " ($)"), var_label))  # "($)" keeps the money formatting working
 
-beats <- split(setNames(coding$name, coding$label), coding$beat)
+beats <- split(setNames(coding$name, coding$label), coding$beats)
 all_vars <- unlist(unname(beats))
 all_vars <- all_vars[!duplicated(all_vars)]
 
