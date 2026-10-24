@@ -21,3 +21,6 @@ README_files/*
 
 /.quarto/
 **/*.quarto_ipynb
+
+# Nicole's test app
+nicoletestapp/
