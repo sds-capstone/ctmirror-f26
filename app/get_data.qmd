@@ -45,3 +45,40 @@ clean_acs5 <- acs5 |>
 saveRDS(clean_acs5, "app/data/acs5.rds")
 
 ```
+
+# Getting ACS 1-year data.
+Careful when running this -- sometimes the census servers are busy and variables will get skipped. If this is happening too much wait and try at a better time. 
+```{r}
+# Initialize data frame
+acs1 <- data.frame()
+years <- setdiff(2005:2024, 2020) # There is no ACS for 2020
+for (x in years) {
+    for (i in unique(dict$table)) {
+        df <- tryCatch(
+        get_acs(
+            geography = "state", 
+            table = i,
+            state = "CT", 
+            summary_var = paste0(i, "_001"),
+            survey = "acs1", # need to specify since the default is acs5
+            geometry = FALSE, 
+            year = x), # get_acs can only take 1 year at a time
+        error = function(e) {
+                    message("Skipping ", x, ": ", conditionMessage(e))
+                    NULL
+                }) 
+        if (is.null(df)) next
+        df <- df |> mutate(year = x)
+        acs1 <- bind_rows(acs1, df)
+    }
+}
+     
+clean_acs1 <- acs1 |>
+    select(-NAME) |>
+    left_join(dict, by = "variable") |>
+    mutate(pct = (estimate / summary_est)*100) |>
+    mutate(tooltip = paste0(year, ": ", round(pct,2), "%"))
+
+saveRDS(clean_acs1, "app/data/acs1.rds")
+
+```
