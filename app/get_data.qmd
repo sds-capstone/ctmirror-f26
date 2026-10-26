@@ -17,7 +17,7 @@ dict <- vars |>
 # Getting ACS 5-year data
 ```{r}
 # Initialize data frame
-acs5 <- data.frame()
+acs5_list <- list()
 # Call each of the high priority tables (24 in total right now) for each CT town
 for (i in unique(dict$table)) {
   ct <- get_acs(
@@ -27,17 +27,24 @@ for (i in unique(dict$table)) {
   summary_var = paste0(i, "_001"), # this adds the denominator for the percents
   year = 2024,
   output = "tidy",
-  geometry = TRUE,
+  geometry = FALSE,
   survey = "acs5")
 
-  acs5 <- bind_rows(acs5, ct)
+acs5_list[[i]] <- ct
 }
 
+acs5_raw <- bind_rows(acs5_list)
+
+ct_geo <- tigris::county_subdivisions(state = "CT", year = 2024, cb = TRUE) |> 
+  dplyr::select(GEOID, NAME, geometry)
+
 # Housekeeping
-clean_acs5 <- acs5 |>
-  mutate(town = sub(" town.*", "", NAME)) |>
+clean_acs5 <- acs5_raw |>
+  select(-NAME) |>
   left_join(dict, by = "variable") |>
-  mutate(pct = (estimate / summary_est)*100) |>
+  mutate(pct = (estimate / summary_est) * 100) |>
+  left_join(ct_geo, by = "GEOID") |>
+  mutate(town = sub(" town.*", "", NAME)) |>
   select(-NAME) |>
   sf::st_as_sf()
 
@@ -50,10 +57,12 @@ saveRDS(clean_acs5, "app/data/acs5.rds")
 Careful when running this -- sometimes the census servers are busy and variables will get skipped. If this is happening too much wait and try at a better time. 
 ```{r}
 # Initialize data frame
-acs1 <- data.frame()
+acs1_list <- list()
 years <- setdiff(2005:2024, 2020) # There is no ACS for 2020
+
 for (x in years) {
     for (i in unique(dict$table)) {
+      list_key <- paste0(x, "_", i)
         df <- tryCatch(
         get_acs(
             geography = "state", 
@@ -69,11 +78,13 @@ for (x in years) {
                 }) 
         if (is.null(df)) next
         df <- df |> mutate(year = x)
-        acs1 <- bind_rows(acs1, df)
+        acs1_list[[list_key]] <- df
     }
 }
+
+acs1_raw <- bind_rows(acs1_list)
      
-clean_acs1 <- acs1 |>
+clean_acs1 <- acs1_raw |>
     select(-NAME) |>
     left_join(dict, by = "variable") |>
     mutate(pct = (estimate / summary_est)*100) |>
