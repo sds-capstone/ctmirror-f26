@@ -28,14 +28,19 @@ ui <- page_sidebar(
   fillable = FALSE,
 
   sidebar = sidebar(
-    selectInput("beat", "Beat", choices = names(beats)),
-    uiOutput("variable_ui")
+    selectInput("beat", "Beat", choices = c("All beats", names(beats))),
+    selectizeInput(
+      "variable", "Variable", choices = NULL, width = "100%",
+      options = list(placeholder = "Type to search...",
+                     openOnFocus = TRUE,
+                     maxOptions = 200)
+    )
   ),
 
   navset_tab(
     nav_panel(
       "Home", 
-      "", 
+      conditionalPanel("!input.variable", p("Pick a variable to get started")),
       leafletOutput(outputId = "ctmap_dynamic"),
       plotly::plotlyOutput(outputId = "time_series"),
       ),
@@ -54,25 +59,33 @@ ui <- page_sidebar(
 )
 
 # Define server logic 
-server <- function(input, output) {
+server <- function(input, output, session) {
 
-  # Sidebar
-  output$variable_ui <- renderUI({
-    selectInput("variable", "Variable", choices = beats[[input$beat]])
+  # Sidebar: Beat narrows the variable list; the Variable box is type-to-search.
+  # server = TRUE keeps the browser fast even with thousands of variables.
+  observeEvent(input$beat, {
+    choices <- if (input$beat == "All beats") all_vars else beats[[input$beat]]
+    updateSelectizeInput(session, "variable",
+                         choices = choices,
+                         selected = "",   # start empty so the placeholder shows
+                         server = TRUE)
   })
 
   # Dynamic variable label
   var_label <- reactive({
+    req(input$variable)   # wait until a variable is picked
     names(all_vars)[all_vars == input$variable]
   })
 
   # ACS 5 Year Data Download --> map
   ct <- reactive({
+    req(input$variable)
     acs5 |> filter(variable == input$variable)
   })
 
   # ACS 1 Year Data Download --> time-series
   time_series_data <- reactive({
+    req(input$variable)
     acs1 <- acs1 |> filter(variable == input$variable)
   })
 
