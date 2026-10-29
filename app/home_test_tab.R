@@ -29,7 +29,7 @@ home_test_server <- function(id, acs5, acs1) {
     filter(!is.na(beat), beat != "Meta")
 
   # Medians, indexes etc. can't be added up: show one line at a time instead
-  not_additive <- "\\b(median|mean|average|per capita|aggregate)\\b"
+  not_additive <- "\\b(median|mean|average|per capita|aggregate|gini|index)\\b"
   # Lines overlap or leave people out, so they can't be added up either. Each line is shown
   # as a percent of the line above it instead ("Rented > Over 30 Percent" = % of renters).
   # B25140: "Over 50 Percent" is also "Over 30 Percent". B26103/B26203 list only some types.
