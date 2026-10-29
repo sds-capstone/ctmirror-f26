@@ -1,7 +1,10 @@
 
 # Housekeeping
 ```{r}
-# Libraries and reading in our mapping system
+# Update data when a new census is published
+end_year <- 2024
+
+# Read in libraries and our mapping system
 library(sf)
 library(dplyr)
 library(tidycensus)
@@ -20,25 +23,34 @@ dict <- vars |>
 acs5_list <- list()
 # Call each of the high priority tables (24 in total right now) for each CT town
 for (i in unique(dict$table)) {
-  ct <- get_acs(
+  message("Running ", i, " currently...")
+  
+  ct <- tryCatch(get_acs(
   geography = "county subdivision",
   state = "CT",
   table = i,
   summary_var = paste0(i, "_001"), # this adds the denominator for the percents
-  year = 2024,
+  year = end_year,
   output = "tidy",
   geometry = FALSE,
-  survey = "acs5")
+  survey = "acs5"),
+  error = function(e) {
+                    message("Skipping ", i, ": ", conditionMessage(e))
+                    NULL
+                }) 
+  if (is.null(ct)) next
 
 acs5_list[[i]] <- ct
 }
 
+# Collapse list into one data frame
 acs5_raw <- bind_rows(acs5_list)
 
-ct_geo <- tigris::county_subdivisions(state = "CT", year = 2024, cb = TRUE) |> 
+# Get shapefile
+ct_geo <- tigris::county_subdivisions(state = "CT", year = end_year, cb = TRUE) |> 
   dplyr::select(GEOID, NAME, geometry)
 
-# Housekeeping
+# Clean data
 clean_acs5 <- acs5_raw |>
   select(-NAME) |>
   left_join(dict, by = "variable") |>
@@ -87,8 +99,7 @@ acs1_raw <- bind_rows(acs1_list)
 clean_acs1 <- acs1_raw |>
     select(-NAME) |>
     left_join(dict, by = "variable") |>
-    mutate(pct = (estimate / summary_est)*100) |>
-    mutate(tooltip = paste0(year, ": ", round(pct,2), "%"))
+    mutate(pct = (estimate / summary_est)*100)
 
 saveRDS(clean_acs1, "app/data/acs1.rds")
 
