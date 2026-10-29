@@ -77,37 +77,55 @@ server <- function(input, output, session) {
     names(all_vars)[all_vars == input$variable]
   })
 
+  # Choosing either raw count or percentage
+  value_type <- reactive({
+    req(input$variable)
+    percents <- !grepl("\\b(median|mean|average|aggregate|per capita|gini|index)\\b", var_label(), ignore.case = TRUE)
+    if (percents) "pct" else "estimate"
+  })
+
+  # Dynamically update graph formatting 
+  fmt <- reactive({
+    if (value_type() == "pct") { list(prefix = "", suffix = "%", digits = 1)} 
+    else if (value_type() == "estimate" & grepl("$", var_label(), fixed = TRUE)) { list(prefix = "$", suffix = "", digits = 0)} 
+    else {list(prefix = "", suffix = "", digits = 0)}
+  })
+
   # ACS 5 Year Data Download --> map
   ct <- reactive({
     req(input$variable)
+    acs5$value <- acs5[[value_type()]]
     acs5 |> filter(variable == input$variable)
   })
 
   # ACS 1 Year Data Download --> time-series
   time_series_data <- reactive({
     req(input$variable)
-    acs1 <- acs1 |> filter(variable == input$variable)
+    acs1$value <- acs1[[value_type()]]
+    acs1 <- acs1 |> 
+      filter(variable == input$variable) |>
+      mutate(tooltip = paste0(year, ": ", fmt()$prefix, round(value,2), fmt()$suffix))
   })
 
   # Map
   output$ctmap_dynamic <- renderLeaflet({
     pal <- colorNumeric(
       palette = "magma",
-      domain = ct()$pct)
+      domain = ct()$value)
     pal_reverse <- colorNumeric(
       palette = "magma",
-      domain = ct()$pct,
+      domain = ct()$value,
       reverse = TRUE)
-    #money <- if (grepl("\\$", var_label())) "$" else ""
-    money <- "" # we can keep the above line if we add a user option to see counts
     leaflet() |>
       addProviderTiles(providers$OpenStreetMap) |>
       addPolygons(data = ct(),
-            color = ~pal_reverse(pct),
+            color = ~pal_reverse(value),
             weight = 0.5,
             smoothFactor = 0.2,
             fillOpacity = 0.75,
-            label = ~paste0(town, ": ",  money, round(pct,1), "%"),
+            label = ~paste0(town, ": ", fmt()$prefix,
+                      formatC(value, format = "f", digits = fmt()$digits, big.mark = ","),
+                      fmt()$suffix),
             highlightOptions = highlightOptions(
               color = "red",
               weight = 2,
@@ -115,18 +133,19 @@ server <- function(input, output, session) {
       addLegend(
         position = "bottomright",
         pal = pal,
-        values = ct()$pct,
+        values = ct()$value,
         title = var_label(),
         labFormat = labelFormat(
-          prefix = money,
-          suffix = "%",
+          prefix = fmt()$prefix,
+          suffix = fmt()$suffix,
+          digits = fmt()$digits,
           big.mark = ",",
           transform = function(x) sort(x, decreasing = TRUE)))
   })
 
   # Time-Series Visualization 
   output$time_series <- renderPlotly({ 
-    g <- suppressWarnings(ggplot(time_series_data(), aes(x=year, y=pct)) + 
+    g <- suppressWarnings(ggplot(time_series_data(), aes(x=year, y=value)) + 
       geom_line(linewidth = 0.8) +
       geom_point(aes(text = tooltip)) +
       theme_minimal() +
