@@ -6,6 +6,9 @@ library(leaflet)
 library(scales)
 library(plotly)
 source(here::here("app", "ingest.R"))
+source(here::here("app", "table_dimensions.R"))
+source(here::here("app", "home_test_tab.R"))
+
 acs5 <- readRDS(here::here("app/data", "acs5.rds"))
 acs1 <- readRDS(here::here("app/data", "acs1.rds"))
 options(tigris_use_cache = TRUE)
@@ -38,6 +41,7 @@ ui <- page_sidebar(
   ),
 
   navset_tab(
+     nav_panel("Home Test", home_test_ui("home_test")),
     nav_panel(
       "Home", 
       conditionalPanel("!input.variable", p("Pick a variable to get started")),
@@ -173,7 +177,9 @@ server <- function(input, output, session) {
         clean_data = sf::st_drop_geometry(ct())
       write.csv(clean_data, file)}
   )
-  
+
+# Home Test
+home_test_server("home_test", acs5, acs1)  
 }
 
 shinyApp(ui = ui, server = server)
