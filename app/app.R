@@ -8,6 +8,7 @@ library(plotly)
 source(here::here("app", "ingest.R"))
 acs5 <- readRDS(here::here("app/data", "acs5.rds"))
 acs1 <- readRDS(here::here("app/data", "acs1.rds"))
+acs5_ts <- readRDS(here::here("app/data", "acs5_ts.rds"))
 options(tigris_use_cache = TRUE)
 
 # Beats and variables (WIP: now read from the sheet, one variable per ACS table)
@@ -40,7 +41,8 @@ ui <- page_sidebar(
       plotly::plotlyOutput(outputId = "time_series"),
       ),
     nav_panel(
-      "Advanced", "Coming soon!"
+      "Advanced", "",
+      plotly::plotlyOutput(outputId = "time_series_5")
     ),
     nav_panel(
       "Find variables", "Coming soon!"
@@ -74,6 +76,11 @@ server <- function(input, output) {
   # ACS 1 Year Data Download --> time-series
   time_series_data <- reactive({
     acs1 <- acs1 |> filter(variable == input$variable)
+  })
+
+  # ACS 5 Year Data Download --> time-series 
+  time_series_data_5 <- reactive({
+    acs5_ts
   })
 
   # Map
@@ -118,6 +125,18 @@ server <- function(input, output) {
       geom_point(aes(text = tooltip)) +
       theme_minimal() +
       labs(title = paste0("Statewide Summary: ", var_label()), x = "Year", y = var_label()) +
+      scale_y_continuous(labels = label_comma(), limits = c(0,NA)))
+
+    plotly::ggplotly(g, tooltip = "text")
+  })
+
+  # 5-year Time-Series Visualization 
+  output$time_series_5 <- renderPlotly({ 
+    g <- suppressWarnings(ggplot(time_series_data_5(), aes(x=year, y=estimate)) + 
+      geom_line(aes(color = NAME), linewidth = 0.8) +
+      geom_point(aes(text = estimate)) +
+      theme_minimal() +
+      labs(title = paste0("Town vs. State total pop."), x = "Year", y = "total pop.") +
       scale_y_continuous(labels = label_comma(), limits = c(0,NA)))
 
     plotly::ggplotly(g, tooltip = "text")

@@ -82,3 +82,65 @@ clean_acs1 <- acs1 |>
 saveRDS(clean_acs1, "app/data/acs1.rds")
 
 ```
+
+
+
+
+# Getting ACS 5-year data for time series 
+only for one variable for now  
+```{r}
+# Initialize data frame
+acs5_ts <- data.frame()
+years <- seq(2024, 2005, -5) # There is no ACS for 2020
+for (x in years) {
+        df <- tryCatch(
+        get_acs(
+            geography = "state", 
+            table = "B01003",
+            state = "CT", 
+            summary_var = paste0("B01003", "_001"),
+            survey = "acs5", # need to specify since the default is acs5
+            geometry = FALSE, 
+            year = x), # get_acs can only take 1 year at a time
+        error = function(e) {
+                    message("Skipping ", x, ": ", conditionMessage(e))
+                    NULL
+                }) 
+        if (is.null(df)) next
+        df <- df |> mutate(year = x)
+        acs5_ts <- bind_rows(acs5_ts, df)
+}
+
+for (x in years) {
+        df2 <- tryCatch(
+        get_acs(
+            geography = "county subdivision", 
+            table = "B01003",
+            state = "CT", 
+            summary_var = paste0("B01003", "_001"),
+            survey = "acs5", # need to specify since the default is acs5
+            geometry = FALSE, 
+            year = x), # get_acs can only take 1 year at a time
+        error = function(e) {
+                    message("Skipping ", x, ": ", conditionMessage(e))
+                    NULL
+                }) 
+        if (is.null(df)) next
+        df2 <- df2 |> mutate(year = x)
+        acs5_ts <- bind_rows(acs5_ts, df2)
+}
+ 
+ 
+```
+
+ ```{r}
+clean_acs5_ts <- acs5_ts |>
+    separate_wider_delim(NAME, delim = ",", names = c("NAME", "Region", "State", "etc"), too_few = "align_start") |>
+    filter(NAME == "Connecticut" | NAME == "East Lyme town") |>
+    left_join(dict, by = "variable") |>
+    mutate(pct = (estimate / summary_est)*100)
+saveRDS(clean_acs5_ts, "app/data/acs5_ts.rds")
+
+```
+
+
