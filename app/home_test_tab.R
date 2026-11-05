@@ -1,13 +1,19 @@
+# Controls (go in the app's sidebar)
+home_test_sidebar_ui <- function(id) {
+  ns <- NS(id)
+  tagList(
+    selectInput(ns("beat"), "Beat", choices = NULL),
+    selectizeInput(ns("table"), "Variable", choices = NULL,
+                   options = list(placeholder = "Type to search...")),
+    uiOutput(ns("filters_ui")),
+    uiOutput(ns("percent_of_ui"))
+  )
+}
+
+# Map and time series (go in the tab body)
 home_test_ui <- function(id) {
   ns <- NS(id)
-  layout_sidebar(
-    sidebar = sidebar(
-      selectInput(ns("beat"), "Beat", choices = NULL),
-      selectizeInput(ns("table"), "Variable", choices = NULL,
-                     options = list(placeholder = "Type to search...")),
-      uiOutput(ns("filters_ui")),
-      uiOutput(ns("percent_of_ui"))
-    ),
+  tagList(
     leafletOutput(ns("map")),
     plotlyOutput(ns("time_series"))
   )

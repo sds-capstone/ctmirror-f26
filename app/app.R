@@ -31,17 +31,27 @@ ui <- page_sidebar(
   fillable = FALSE,
 
   sidebar = sidebar(
-    selectInput("beat", "Beat", choices = c("All beats", names(beats))),
-    selectizeInput(
-      "variable", "Variable", choices = NULL, width = "100%",
-      options = list(placeholder = "Type to search...",
-                     openOnFocus = TRUE,
-                     maxOptions = 200)
+    # Old controls (unchanged), hidden on the Home Test tab
+    conditionalPanel(
+      "input.main_tabs != 'home_test'",
+      selectInput("beat", "Beat", choices = c("All beats", names(beats))),
+      selectizeInput(
+        "variable", "Variable", choices = NULL, width = "100%",
+        options = list(placeholder = "Type to search...",
+                       openOnFocus = TRUE,
+                       maxOptions = 200)
+      )
+    ),
+    # Home Test controls, shown only on the Home Test tab
+    conditionalPanel(
+      "input.main_tabs == 'home_test'",
+      home_test_sidebar_ui("home_test")
     )
   ),
 
   navset_tab(
-     nav_panel("Home Test", home_test_ui("home_test")),
+    id = "main_tabs",
+    nav_panel("Home Test", value = "home_test", home_test_ui("home_test")),
     nav_panel(
       "Home", 
       conditionalPanel("!input.variable", p("Pick a variable to get started")),
