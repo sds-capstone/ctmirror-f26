@@ -21,7 +21,7 @@ dict <- vars |>
 ```{r}
 # Initialize data frame
 acs5_list <- list()
-# Call each of the high priority tables (24 in total right now) for each CT town
+# Call each of the high priority tables for each CT town
 for (i in unique(dict$table)) {
   message("Running ", i, " currently...")
   
