@@ -8,7 +8,7 @@ end_year <- 2024
 library(sf)
 library(dplyr)
 library(tidycensus)
-source(here::here("app", "ingest.R"))
+source(here::here("app", "ingest.R"), chdir = TRUE)
 
 # Create a dictionary to join with the ACS data, keeping only high priority variables
 dict <- vars |>
