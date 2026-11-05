@@ -8,7 +8,7 @@ end_year <- 2024
 library(sf)
 library(dplyr)
 library(tidycensus)
-source(here::here("app", "ingest.R"))
+source(here::here("app", "ingest.R"), chdir = TRUE)
 
 # Create a dictionary to join with the ACS data, keeping only high priority variables
 dict <- vars |>
@@ -21,7 +21,7 @@ dict <- vars |>
 ```{r}
 # Initialize data frame
 acs5_list <- list()
-# Call each of the high priority tables (24 in total right now) for each CT town
+# Call each of the high priority tables for each CT town
 for (i in unique(dict$table)) {
   message("Running ", i, " currently...")
   

@@ -4,8 +4,8 @@
 
 - Zoe Khan (Sprint 1 Product Owner)
 - Nicole Choi (Sprint 2 Product Owner)
-- Bayansulu Tulepbayeva (Tulip)
-- Ellie (Eleanor) Zdancewic
+- Bayansulu (Tulip) Tulepbayeva
+- Ellie Zdancewic (Sprint 3 Product Owner)
  
 ## Team rules
 
