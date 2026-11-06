@@ -41,7 +41,7 @@ number-sections: true
 
 ## Introduction
 
-> The Connecticut (CT) Mirror is a Pulitzer-prize winning non-profit newspaper based in Hartford, Connecticut[@pazniokas_ct_2026]. Through careful reporting of issues spanning immigration, economics, criminal justice, and public health, the CT Mirror fills a crucial gap in state policy reporting in Connecticut. Beat reporters frequently integrate Connecticut census data in their reporting to provide context on housing trends, education outcomes, and demographic statistics. However, CT Mirror reporters lack the technical background to make full use of this rich dataset. According to CT Mirror reporter Angela Eichhorst, reporters “want to be able to look at historical trends and also compare town by town but they don't know how to use the US 5 year census data estimates.” Furthermore some “reporters don't necessarily know all of the data that is available to them to look at” [@angela_eichhorst_connecticut_2026]. Therefore, the goals of the CT Mirror Census Data Dashboard are twofold: first, to provide a user-friendly simplified tool to engage with historical and town-by-town census data, and second, to introduce reporters to the full scope of census data available. 
+> The Connecticut (CT) Mirror is a Pulitzer-prize winning non-profit newspaper based in Hartford, Connecticut [@pazniokas_ct_2026]. Through careful reporting of issues spanning immigration, economics, criminal justice, and public health, the CT Mirror fills a crucial gap in state policy reporting in Connecticut. Beat reporters frequently integrate Connecticut census data in their reporting to provide context on housing trends, education outcomes, and demographic statistics. However, CT Mirror reporters lack the technical background to make full use of this rich dataset. According to CT Mirror reporter Angela Eichhorst, reporters “want to be able to look at historical trends and also compare town by town but they don't know how to use the US 5 year census data estimates.” Furthermore some “reporters don't necessarily know all of the data that is available to them to look at” [@angela_eichhorst_connecticut_2026]. Therefore, the goals of the CT Mirror Census Data Dashboard are twofold: first, to provide a user-friendly simplified tool to engage with historical and town-by-town census data, and second, to introduce reporters to the full scope of census data available. 
 
 ### Relevant work
 
@@ -49,7 +49,7 @@ number-sections: true
 
 ![Census Business Builder User Interface](images/cbb_image.png){#fig-cbb}
 
-> Alternatively, the Census Bureau publishes a data analytics tool called the Census Business Builder[@us_census_bureau_census_2026]. This dashboard, geared towards small business owners, visualizes census data across a variety of geographies, breaking it down by a primary and secondary variable as well as a demographic filter. @fig-cbb shows a screenshot of the Census Business Builder User-Interface with one primary variable selected at the county level. But while the Census Business Builder is comprehensive, it does not fit the specific needs of the CTMirror newsroom. The dashboard has a steep learning curve and is not intuitive for a non-technical user. Additionally, it is not built for a Connecticut-specific use case. The Census Business Builder has data on the state, county, and town level. Connecticut, however, doesn’t make legislative decisions on the county-level, making State and Town the only necessary geographies for this region [@angela_eichhorst_connecticut_2026]. Finally, the Census Business Builder does not provide historical time-series data. 
+> Alternatively, the Census Bureau publishes a data analytics tool called the Census Business Builder [@us_census_bureau_census_2026]. This dashboard, geared towards small business owners, visualizes census data across a variety of geographies, breaking it down by a primary and secondary variable as well as a demographic filter. @fig-cbb shows a screenshot of the Census Business Builder User-Interface with one primary variable selected at the county level. But while the Census Business Builder is comprehensive, it does not fit the specific needs of the CTMirror newsroom. The dashboard has a steep learning curve and is not intuitive for a non-technical user. Additionally, it is not built for a Connecticut-specific use case. The Census Business Builder has data on the state, county, and town level. Connecticut, however, doesn’t make legislative decisions on the county-level, making State and Town the only necessary geographies for this region [@angela_eichhorst_connecticut_2026]. Finally, the Census Business Builder does not provide historical time-series data. 
 
 ### Our contribution
 
@@ -97,9 +97,6 @@ number-sections: true
 > Were there any people or organizations who helped you that you would like to acknowledge? 
 
 ## References {.unnumbered}
-
-> References: Every reference (except for books) needs a DOI (strongly preferred) or URL. Use [Google Scholar](https://scholar.google.com) to help with BibTeX. Every book needs publisher location (e.g. "City, ST: Publisher"). 🙄 
-> See [SDS 100: Bibliographies](https://smithcollege-sds.github.io/sds100/lab_12_bibliographies.html)
 
 :::{#refs}
 
