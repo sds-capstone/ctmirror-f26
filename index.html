@@ -6,12 +6,14 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Steve Purves">
-<meta name="author" content="Rowan Cockett">
-<meta name="dcterms.date" content="2026-11-05">
-<meta name="keywords" content="La Palma, Earthquakes">
+<meta name="author" content="Nicole Choi">
+<meta name="author" content="Zoe Khan">
+<meta name="author" content="Bayansulu Tulepbayeva">
+<meta name="author" content="Ellie Zdancewic">
+<meta name="dcterms.date" content="2026-11-06">
+<meta name="keywords" content="Connecticut, Census">
 
-<title>La Palma Earthquakes</title>
+<title>Connecticut Mirror Data Dashboard</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -63,7 +65,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-f0688f390a76b21125ecd060a3d0a4db.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c6bfc1a4d67562019fe79a65ad91e892.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-27e7aecbfd76940d03b8e4778a6b0ae4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -74,48 +76,25 @@ div.csl-indent {
   });
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<meta name="citation_title" content="La Palma Earthquakes">
-<meta name="citation_abstract" content="In September 2021, a significant jump in seismic activity on the island of La Palma (Canary Islands, Spain) signaled the start of a volcanic crisis that still continues at the time of writing. Earthquake data is continually collected and published by the Instituto Geográphico Nacional (IGN). ...
+<meta name="citation_title" content="Connecticut Mirror Data Dashboard">
+<meta name="citation_abstract" content="The American Community Survey (ACS) is the most detailed public source of demographic and economic data for Connecticut, yet reporters rarely use it because the Census Bureau’s tools are hard to navigate, organize data by county instead of by town, and offer little historical context. We build an interactive tool, in partnership with Connecticut (CT) Mirror, that makes ACS accessible to Connecticut reporters. We restrict the ACS to Connecticut and its 169 towns, organize roughly 1,200 concepts into 14 reporting beats, flag high-priority variables, and display historical trends alongside current estimates. Our tool offers a model for adapting large federal datasets to the needs of a specific newsroom.
 ">
-<meta name="citation_keywords" content="La Palma,Earthquakes">
-<meta name="citation_author" content="Steve Purves">
-<meta name="citation_author" content="Rowan Cockett">
-<meta name="citation_publication_date" content="2026-11-05">
-<meta name="citation_cover_date" content="2026-11-05">
+<meta name="citation_keywords" content="Connecticut,Census">
+<meta name="citation_author" content="Nicole Choi">
+<meta name="citation_author" content="Zoe Khan">
+<meta name="citation_author" content="Bayansulu Tulepbayeva">
+<meta name="citation_author" content="Ellie Zdancewic">
+<meta name="citation_publication_date" content="2026-11-06">
+<meta name="citation_cover_date" content="2026-11-06">
 <meta name="citation_year" content="2026">
-<meta name="citation_online_date" content="2026-11-05">
+<meta name="citation_online_date" content="2026-11-06">
 <meta name="citation_language" content="en">
-<meta name="citation_reference" content="citation_title=Strategies for the development of volcanic hazard maps in monogenetic volcanic fields: The example of La Palma (Canary Islands); citation_author=José Marrero; citation_author=Alicia García; citation_author=Manuel Berrocoso; citation_author=Ángeles Llinares; citation_author=Antonio Rodríguez-Losada; citation_author=R. Ortiz; citation_publication_date=2019-07; citation_cover_date=2019-07; citation_year=2019; citation_doi=10.1186/s13617-019-0085-5; citation_volume=8; citation_journal_title=Journal of Applied Volcanology;">
+<meta name="citation_reference" content="citation_title=American Community Survey (ACS); citation_abstract=The American Community Survey is the premier source for information about America’s changing population, housing and workforce.; citation_author=US Census Bureau; citation_publication_date=2026; citation_cover_date=2026; citation_year=2026; citation_fulltext_html_url=https://www.census.gov/programs-surveys/acs.html; citation_journal_title=Census.gov;">
+<meta name="citation_reference" content="citation_title=American Community Survey Information Guide; citation_abstract=You have questions. We have answers! &amp;mdash; in the ACS Information Guide &amp;mdash; a comprehensive guide to all things ACS.; citation_author=US Census Bureau; citation_publication_date=2026; citation_cover_date=2026; citation_year=2026; citation_fulltext_html_url=https://www.census.gov/programs-surveys/acs/about/information-guide.html; citation_journal_title=Census.gov;">
+<meta name="citation_reference" content="citation_title=CT Mirror wins first Pulitzer Prize for ’On the Hook’ series; citation_abstract=The series, produced with ProPublica, focused on how CT laws had come to favor towing companies at the expense of low-income residents.; citation_author=Mark Pazniokas; citation_publication_date=2026-05; citation_cover_date=2026-05; citation_year=2026; citation_fulltext_html_url=https://ctmirror.org/2026/05/04/ctmirror-pulitzer-prize-on-the-hook-propublica/; citation_journal_title=CT Mirror;">
+<meta name="citation_reference" content="citation_title=Connecticut Mirror Project Video; citation_author=Angela Eichhorst; citation_publication_date=2026; citation_cover_date=2026; citation_year=2026;">
+<meta name="citation_reference" content="citation_title=Census Business Builder; citation_author=US Census Bureau; citation_publication_date=2026; citation_cover_date=2026; citation_year=2026; citation_fulltext_html_url=https://cbb.census.gov/cbb/#view=map&amp;industries=00&amp;clusterName=Custom+Industries&amp;geoType=state&amp;dataVariable=33&amp;dashboardVars=15-17-1-64&amp;centerX=-10802692&amp;centerY=4568679&amp;level=4&amp;theme=default&amp;dynHeader=Custom+Region;">
 </head>
 
 <body class="quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
@@ -123,7 +102,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">La Palma Earthquakes</h1>
+      <h1 class="title">Connecticut Mirror Data Dashboard</h1>
           </div>
 
     
@@ -134,19 +113,35 @@ window.Quarto = {
           <div class="quarto-title-meta-heading">Affiliation</div>
           
                 <div class="quarto-title-meta-contents">
-            <p class="author">Steve Purves <a href="mailto:steve@curvenote.com" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0000-0002-0760-5497" class="quarto-title-author-orcid" aria-label="ORCID profile for Steve Purves"> <img alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+            <p class="author">Nicole Choi <a href="mailto:nchoi@smith.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
           </div>
                 <div class="quarto-title-meta-contents">
                     <p class="affiliation">
-                        Curvenote
+                        Smith College
                       </p>
                   </div>
                       <div class="quarto-title-meta-contents">
-            <p class="author">Rowan Cockett <a href="https://orcid.org/0000-0002-7859-8394" class="quarto-title-author-orcid" aria-label="ORCID profile for Rowan Cockett"> <img alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+            <p class="author">Zoe Khan <a href="mailto:zkhan@smith.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
           </div>
                 <div class="quarto-title-meta-contents">
                     <p class="affiliation">
-                        Curvenote
+                        Smith College
+                      </p>
+                  </div>
+                      <div class="quarto-title-meta-contents">
+            <p class="author">Bayansulu Tulepbayeva <a href="mailto:btulepbayeva@smith.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        Smith College
+                      </p>
+                  </div>
+                      <div class="quarto-title-meta-contents">
+            <p class="author">Ellie Zdancewic <a href="mailto:ezdancewic@smith.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        Smith College
                       </p>
                   </div>
                     </div>
@@ -157,7 +152,7 @@ window.Quarto = {
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">November 5, 2026</p>
+              <p class="date">November 6, 2026</p>
             </div>
           </div>
           
@@ -171,14 +166,14 @@ window.Quarto = {
     <div>
       <div class="abstract">
         <div class="block-title">Abstract</div>
-        <p>In September 2021, a significant jump in seismic activity on the island of La Palma (Canary Islands, Spain) signaled the start of a volcanic crisis that still continues at the time of writing. Earthquake data is continually collected and published by the Instituto Geográphico Nacional (IGN). …</p>
+        <p>The American Community Survey (ACS) is the most detailed public source of demographic and economic data for Connecticut, yet reporters rarely use it because the Census Bureau’s tools are hard to navigate, organize data by county instead of by town, and offer little historical context. We build an interactive tool, in partnership with Connecticut (CT) Mirror, that makes ACS accessible to Connecticut reporters. We restrict the ACS to Connecticut and its 169 towns, organize roughly 1,200 concepts into 14 reporting beats, flag high-priority variables, and display historical trends alongside current estimates. Our tool offers a model for adapting large federal datasets to the needs of a specific newsroom.</p>
       </div>
     </div>
 
     <div>
       <div class="keywords">
         <div class="block-title">Keywords</div>
-        <p>La Palma, Earthquakes</p>
+        <p>Connecticut, Census</p>
       </div>
     </div>
 
@@ -208,7 +203,7 @@ window.Quarto = {
   
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
-<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="index-preview.html"><i class="bi bi-journal-code"></i>Article Notebook</a></li></ul></div></nav>
+</nav>
 </div>
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
 </div>
@@ -222,129 +217,71 @@ window.Quarto = {
 <section id="introduction" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
 <blockquote class="blockquote">
-<p>Introduction and Motivation: What is the problem you are trying to solve? Why is this problem interesting? What has been tried before? What have been the shortcoming of those approaches that necessitate your efforts? Often, this section will conclude with a subsection (or paragraph) outlining “our contributions.” What is the new knowledge that this paper contributes?</p>
+<p>The Connecticut (CT) Mirror is a Pulitzer-prize winning non-profit newspaper based in Hartford, Connecticut<span class="citation" data-cites="pazniokas_ct_2026">(<a href="#ref-pazniokas_ct_2026" role="doc-biblioref">Pazniokas 2026</a>)</span>. Through careful reporting of issues spanning immigration, economics, criminal justice, and public health, the CT Mirror fills a crucial gap in state policy reporting in Connecticut. Beat reporters frequently integrate Connecticut census data in their reporting to provide context on housing trends, education outcomes, and demographic statistics. However, CT Mirror reporters lack the technical background to make full use of this rich dataset. According to CT Mirror reporter Angela Eichhorst, reporters “want to be able to look at historical trends and also compare town by town but they don’t know how to use the US 5 year census data estimates.” Furthermore some “reporters don’t necessarily know all of the data that is available to them to look at” <span class="citation" data-cites="angela_eichhorst_connecticut_2026">(<a href="#ref-angela_eichhorst_connecticut_2026" role="doc-biblioref">Angela Eichhorst 2026</a>)</span>. Therefore, the goals of the CT Mirror Census Data Dashboard are twofold: first, to provide a user-friendly simplified tool to engage with historical and town-by-town census data, and second, to introduce reporters to the full scope of census data available.</p>
 </blockquote>
-<div id="cell-fig-timeline" class="cell">
-<div class="cell-output-display">
-<div id="fig-timeline" class="quarto-float quarto-figure quarto-figure-center anchored" alt="An event plot of the years of the last 8 eruptions on La Palma.">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-timeline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="index_files/figure-html/fig-timeline-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Timeline of recent earthquakes on La Palma"><img src="index_files/figure-html/fig-timeline-1.png" class="img-fluid figure-img" alt="An event plot of the years of the last 8 eruptions on La Palma." width="576"></a>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-timeline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Timeline of recent earthquakes on La Palma
-</figcaption>
-</figure>
-</div>
-</div>
-<a class="quarto-notebook-link" id="nblink-1" href="index-preview.html#cell-fig-timeline">Source: Article Notebook</a></div>
-<p>Based on data up to and including 1971, eruptions on La Palma happen every 79.8 years on average.</p>
-<div id="fig-map" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="images/la-palma-map.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Map of La Palma"><img src="images/la-palma-map.png" class="img-fluid figure-img"></a>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Map of La Palma
-</figcaption>
-</figure>
-</div>
-<p>La Palma is one of the west most islands in the Volcanic Archipelago of the Canary Islands (<a href="#fig-map" class="quarto-xref">Figure&nbsp;2</a>).</p>
 <section id="relevant-work" class="level3" data-number="1.1">
 <h3 data-number="1.1" class="anchored" data-anchor-id="relevant-work"><span class="header-section-number">1.1</span> Relevant work</h3>
-<p>Studies of the magma systems feeding the volcano, such as <span class="citation" data-cites="marrero2019">Marrero et al. (<a href="#ref-marrero2019" role="doc-biblioref">2019</a>)</span>, have proposed that there are two main magma reservoirs feeding the Cumbre Vieja volcano; one in the mantle (30-40km depth) which charges and in turn feeds a shallower crustal reservoir (10-20km depth).</p>
-<p>Eight eruptions have been recorded since the late 1400s (<a href="#fig-timeline" class="quarto-xref">Figure&nbsp;1</a>).</p>
+<blockquote class="blockquote">
+<p>Due to the high-visibility and government sponsorship of the U.S. Census, there already exist several modes of access to Census data. The Census Bureau publishes their American Consumer Survey microdata as interactive and filterable spreadsheets, accessible on their website. However, effective use of these spreadsheets requires significant background knowledge on Census variables, and it is not accessible to the average user. Additionally, while the raw data is accessible from the interactive spreadsheets, there are no visualizations.</p>
+</blockquote>
+<div id="fig-cbb" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cbb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/cbb_image.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Census Business Builder User Interface"><img src="images/cbb_image.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cbb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Census Business Builder User Interface
+</figcaption>
+</figure>
+</div>
+<blockquote class="blockquote">
+<p>Alternatively, the Census Bureau publishes a data analytics tool called the Census Business Builder<span class="citation" data-cites="us_census_bureau_census_2026">(<a href="#ref-us_census_bureau_census_2026" role="doc-biblioref">US Census Bureau 2026c</a>)</span>. This dashboard, geared towards small business owners, visualizes census data across a variety of geographies, breaking it down by a primary and secondary variable as well as a demographic filter. <a href="#fig-cbb" class="quarto-xref">Figure&nbsp;1</a> shows a screenshot of the Census Business Builder User-Interface with one primary variable selected at the county level. But while the Census Business Builder is comprehensive, it does not fit the specific needs of the CTMirror newsroom. The dashboard has a steep learning curve and is not intuitive for a non-technical user. Additionally, it is not built for a Connecticut-specific use case. The Census Business Builder has data on the state, county, and town level. Connecticut, however, doesn’t make legislative decisions on the county-level, making State and Town the only necessary geographies for this region <span class="citation" data-cites="angela_eichhorst_connecticut_2026">(<a href="#ref-angela_eichhorst_connecticut_2026" role="doc-biblioref">Angela Eichhorst 2026</a>)</span>. Finally, the Census Business Builder does not provide historical time-series data.</p>
+</blockquote>
 </section>
 <section id="our-contribution" class="level3" data-number="1.2">
 <h3 data-number="1.2" class="anchored" data-anchor-id="our-contribution"><span class="header-section-number">1.2</span> Our contribution</h3>
-<p>Data and methods are discussed <a href="#sec-data" class="quarto-xref">Section&nbsp;2</a> and <a href="#sec-methods" class="quarto-xref">Section&nbsp;3</a>, respectively.</p>
+<blockquote class="blockquote">
+<p>This paper presents a new user-friendly, interactive Census Data tool that is specifically tailored to the needs of reporters in Connecticut. Unlike existing Census data exploration tools, the Connecticut Mirror Data Dashboard delivers a time-series analysis of variable trends over time. Additionally, the final dashboard is streamlined to provide reporters with the most relevant information as quickly as possible, and leaving out details that would contribute to user confusion.</p>
+</blockquote>
 </section>
 </section>
 <section id="sec-data" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="sec-data"><span class="header-section-number">2</span> Data</h2>
 <blockquote class="blockquote">
-<p>Data: Where did it come from? What are some basic summary statistics, variable definitions, and/or visualizations that help the reader understand the data you are working with?</p>
+<p>The U.S. Census Bureau authors the American Community Survey (ACS), a publicly available data set used widely by the government (and other stakeholders) to understand citizens and make data-driven decisions. It comprises an ongoing survey started in 2005 to collect information about demographics, education, economics, housing, and more, from sampled households across the country <span class="citation" data-cites="us_census_bureau_american_2026">(<a href="#ref-us_census_bureau_american_2026" role="doc-biblioref">US Census Bureau 2026a</a>)</span>. About 3.5 million residential addresses are sampled yearly <span class="citation" data-cites="us_census_bureau_american_2026-1">(<a href="#ref-us_census_bureau_american_2026-1" role="doc-biblioref">US Census Bureau 2026b</a>)</span>. There are different types of ACS releases, including 1-Year Estimates, which contains 12-month data for areas with populations of 65,000+ individuals, and 5-Year Estimates, which merges 60-month data for areas of all population sizes <span class="citation" data-cites="us_census_bureau_american_2026-1">(<a href="#ref-us_census_bureau_american_2026-1" role="doc-biblioref">US Census Bureau 2026b</a>)</span>.</p>
 </blockquote>
-<p>Read a clean version of data:</p>
-<p>Create spatial plot:</p>
-<div id="cell-fig-spatial-plot" class="cell">
-<div class="cell-output-display">
-<div id="fig-spatial-plot" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A scatterplot of earthquake locations plotting latitude against longitude.">
+<blockquote class="blockquote">
+<p>All ACS data covers four main categories: Social Characteristics, Housing Characteristics, Economic Characteristics, Demographic and Housing Estimates <span class="citation" data-cites="us_census_bureau_american_2026">(<a href="#ref-us_census_bureau_american_2026" role="doc-biblioref">US Census Bureau 2026a</a>)</span>. The ACS organizes its data as a tree. Concepts form branches and name a broad table topic, such as Median Household Income in the Past 12 Months. Each concept divides into subconcepts that break the topic down by categories, such as age group, race, or sex. The leaves are individual variables, each of which holds one estimate. The full ACS contains approximately 1,200 concepts and 28,500 subconcepts.</p>
+</blockquote>
+<div id="fig-towns" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-spatial-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="index_files/figure-html/fig-spatial-plot-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Locations of earthquakes on La Palma since 2017"><img src="index_files/figure-html/fig-spatial-plot-1.png" class="img-fluid figure-img" alt="A scatterplot of earthquake locations plotting latitude against longitude." width="672"></a>
+<div aria-describedby="fig-towns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/ct_pop_map.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Total Population of Towns in Connecticut in 2024"><img src="images/ct_pop_map.png" class="img-fluid figure-img"></a>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spatial-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Locations of earthquakes on La Palma since 2017
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-towns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Total Population of Towns in Connecticut in 2024
 </figcaption>
 </figure>
 </div>
+<blockquote class="blockquote">
+<p>For this project, we restrict our dataset to Connecticut. We keep only records for the state and its 169 towns. The geographic location and 2024 total population in these towns is displayed in <a href="#fig-towns" class="quarto-xref">Figure&nbsp;2</a>. This restriction removes the national scope that makes the Census Bureau’s own tools hard to navigate and aligns the data with the geographic units that Connecticut policy uses. The trend of total population of Connecticut in over the last 19 years is represented by <a href="#fig-ts" class="quarto-xref">Figure&nbsp;3</a>.</p>
+</blockquote>
+<div id="fig-ts" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/ct_pop_ts.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Connecticut Total Population 2005-2024"><img src="images/ct_pop_ts.png" class="img-fluid figure-img"></a>
 </div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Connecticut Total Population 2005-2024
+</figcaption>
+</figure>
 </div>
-<p><a href="#fig-spatial-plot" class="quarto-xref">Figure&nbsp;3</a> shows the location of recent Earthquakes on La Palma.</p>
 </section>
 <section id="sec-methods" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="sec-methods"><span class="header-section-number">3</span> Methods</h2>
 <blockquote class="blockquote">
 <p>Methods: What did you actually do? What techniques or methods did you employ? What were the specifications for any statistical models you used? What software or packages did you use or develop?</p>
 </blockquote>
-<p>Let <span class="math inline">\(x\)</span> denote the number of eruptions in a year. Then, <span class="math inline">\(x\)</span> can be modeled by a Poisson distribution</p>
-<p><span id="eq-poisson"><span class="math display">\[
-p(x) = \frac{e^{-\lambda} \lambda^{x}}{x !}
-\tag{1}\]</span></span></p>
-<p>where <span class="math inline">\(\lambda\)</span> is the rate of eruptions per year. Using <a href="#eq-poisson" class="quarto-xref">Equation&nbsp;1</a>, the probability of an eruption in the next <span class="math inline">\(t\)</span> years can be calculated.</p>
-<div id="tbl-history" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-history-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Recent historic eruptions on La Palma
-</figcaption>
-<div aria-describedby="tbl-history-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Year</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Current</td>
-<td>2021</td>
-</tr>
-<tr class="even">
-<td>Teneguía</td>
-<td>1971</td>
-</tr>
-<tr class="odd">
-<td>Nambroque</td>
-<td>1949</td>
-</tr>
-<tr class="even">
-<td>El Charco</td>
-<td>1712</td>
-</tr>
-<tr class="odd">
-<td>Volcán San Antonio</td>
-<td>1677</td>
-</tr>
-<tr class="even">
-<td>Volcán San Martin</td>
-<td>1646</td>
-</tr>
-<tr class="odd">
-<td>Tajuya near El Paso</td>
-<td>1585</td>
-</tr>
-<tr class="even">
-<td>Montaña Quemada</td>
-<td>1492</td>
-</tr>
-</tbody>
-</table>
-</div>
-</figure>
-</div>
-<p><a href="#tbl-history" class="quarto-xref">Table&nbsp;1</a> summarises the eruptions recorded since the colonization of the islands by Europeans in the late 1400s.</p>
 </section>
 <section id="results" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="results"><span class="header-section-number">4</span> Results</h2>
@@ -375,8 +312,20 @@ Table&nbsp;1: Recent historic eruptions on La Palma
 <p>References: Every reference (except for books) needs a DOI (strongly preferred) or URL. Use <a href="https://scholar.google.com">Google Scholar</a> to help with BibTeX. Every book needs publisher location (e.g.&nbsp;“City, ST: Publisher”). 🙄 See <a href="https://smithcollege-sds.github.io/sds100/lab_12_bibliographies.html">SDS 100: Bibliographies</a></p>
 </blockquote>
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-marrero2019" class="csl-entry" role="listitem">
-Marrero, José, Alicia García, Manuel Berrocoso, Ángeles Llinares, Antonio Rodríguez-Losada, and R. Ortiz. 2019. <span>“Strategies for the Development of Volcanic Hazard Maps in Monogenetic Volcanic Fields: The Example of <span>La</span> <span>Palma</span> (<span>Canary</span> <span>Islands</span>).”</span> <em>Journal of Applied Volcanology</em> 8 (July). <a href="https://doi.org/10.1186/s13617-019-0085-5">https://doi.org/10.1186/s13617-019-0085-5</a>.
+<div id="ref-angela_eichhorst_connecticut_2026" class="csl-entry" role="listitem">
+Angela Eichhorst. 2026. <em>Connecticut <span>Mirror</span> <span>Project</span> <span>Video</span></em>.
+</div>
+<div id="ref-pazniokas_ct_2026" class="csl-entry" role="listitem">
+Pazniokas, Mark. 2026. <span>“<span>CT</span> <span>Mirror</span> Wins First <span>Pulitzer</span> <span>Prize</span> for ’<span>On</span> the <span>Hook</span>’ Series.”</span> In <em>CT Mirror</em>. <a href="https://ctmirror.org/2026/05/04/ctmirror-pulitzer-prize-on-the-hook-propublica/">https://ctmirror.org/2026/05/04/ctmirror-pulitzer-prize-on-the-hook-propublica/</a>.
+</div>
+<div id="ref-us_census_bureau_american_2026" class="csl-entry" role="listitem">
+US Census Bureau. 2026a. <span>“American <span>Community</span> <span>Survey</span> (<span>ACS</span>).”</span> In <em>Census.gov</em>. <a href="https://www.census.gov/programs-surveys/acs.html">https://www.census.gov/programs-surveys/acs.html</a>.
+</div>
+<div id="ref-us_census_bureau_american_2026-1" class="csl-entry" role="listitem">
+US Census Bureau. 2026b. <span>“American <span>Community</span> <span>Survey</span> <span>Information</span> <span>Guide</span>.”</span> In <em>Census.gov</em>. <a href="https://www.census.gov/programs-surveys/acs/about/information-guide.html">https://www.census.gov/programs-surveys/acs/about/information-guide.html</a>.
+</div>
+<div id="ref-us_census_bureau_census_2026" class="csl-entry" role="listitem">
+US Census Bureau. 2026c. <em>Census <span>Business</span> <span>Builder</span></em>. <a href="https://cbb.census.gov/cbb/#view=map&amp;industries=00&amp;clusterName=Custom+Industries&amp;geoType=state&amp;dataVariable=33&amp;dashboardVars=15-17-1-64&amp;centerX=-10802692&amp;centerY=4568679&amp;level=4&amp;theme=default&amp;dynHeader=Custom+Region">https://cbb.census.gov/cbb/#view=map&amp;industries=00&amp;clusterName=Custom+Industries&amp;geoType=state&amp;dataVariable=33&amp;dashboardVars=15-17-1-64&amp;centerX=-10802692&amp;centerY=4568679&amp;level=4&amp;theme=default&amp;dynHeader=Custom+Region</a>.
 </div>
 </div>
 </section>

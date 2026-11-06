@@ -190,9 +190,9 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
-  pdftitle={La Palma Earthquakes},
-  pdfauthor={Steve Purves; Rowan Cockett},
-  pdfkeywords={\xmpquote{La Palma}, \xmpquote{Earthquakes}},
+  pdftitle={Connecticut Mirror Data Dashboard},
+  pdfauthor={Nicole Choi; Zoe Khan; Bayansulu Tulepbayeva; Ellie Zdancewic},
+  pdfkeywords={\xmpquote{Connecticut}, \xmpquote{Census}},
   colorlinks=true,
   linkcolor={blue},
   filecolor={Maroon},
@@ -201,125 +201,168 @@
   pdfcreator={LaTeX via pandoc}}
 
 
-\title{La Palma Earthquakes}
-\author{Steve Purves \and Rowan Cockett}
-\date{2026-11-05}
+\title{Connecticut Mirror Data Dashboard}
+\author{Nicole Choi \and Zoe Khan \and Bayansulu Tulepbayeva \and Ellie
+Zdancewic}
+\date{2026-11-06}
 \begin{document}
 \maketitle
 \begin{abstract}
-In September 2021, a significant jump in seismic activity on the island
-of La Palma (Canary Islands, Spain) signaled the start of a volcanic
-crisis that still continues at the time of writing. Earthquake data is
-continually collected and published by the Instituto Geográphico
-Nacional (IGN). \ldots{}
+The American Community Survey (ACS) is the most detailed public source
+of demographic and economic data for Connecticut, yet reporters rarely
+use it because the Census Bureau's tools are hard to navigate, organize
+data by county instead of by town, and offer little historical context.
+We build an interactive tool, in partnership with Connecticut (CT)
+Mirror, that makes ACS accessible to Connecticut reporters. We restrict
+the ACS to Connecticut and its 169 towns, organize roughly 1,200
+concepts into 14 reporting beats, flag high-priority variables, and
+display historical trends alongside current estimates. Our tool offers a
+model for adapting large federal datasets to the needs of a specific
+newsroom.
 \end{abstract}
 
 
 \section{Introduction}\label{introduction}
 
 \begin{quote}
-Introduction and Motivation: What is the problem you are trying to
-solve? Why is this problem interesting? What has been tried before? What
-have been the shortcoming of those approaches that necessitate your
-efforts? Often, this section will conclude with a subsection (or
-paragraph) outlining ``our contributions.'' What is the new knowledge
-that this paper contributes?
+The Connecticut (CT) Mirror is a Pulitzer-prize winning non-profit
+newspaper based in Hartford, Connecticut(Pazniokas 2026). Through
+careful reporting of issues spanning immigration, economics, criminal
+justice, and public health, the CT Mirror fills a crucial gap in state
+policy reporting in Connecticut. Beat reporters frequently integrate
+Connecticut census data in their reporting to provide context on housing
+trends, education outcomes, and demographic statistics. However, CT
+Mirror reporters lack the technical background to make full use of this
+rich dataset. According to CT Mirror reporter Angela Eichhorst,
+reporters ``want to be able to look at historical trends and also
+compare town by town but they don't know how to use the US 5 year census
+data estimates.'' Furthermore some ``reporters don't necessarily know
+all of the data that is available to them to look at'' (Angela Eichhorst
+2026). Therefore, the goals of the CT Mirror Census Data Dashboard are
+twofold: first, to provide a user-friendly simplified tool to engage
+with historical and town-by-town census data, and second, to introduce
+reporters to the full scope of census data available.
 \end{quote}
 
-\textsubscript{Source:
-\href{https://sds-capstone.github.io/ctmirror-f26/index.qmd.html}{Article
-Notebook}}
+\subsection{Relevant work}\label{relevant-work}
 
-\protect\phantomsection\label{cell-fig-timeline}
-\begin{figure}[H]
-
-\centering{
-
-\pandocbounded{\includegraphics[keepaspectratio,alt={An event plot of the years of the last 8 eruptions on La Palma.}]{index_files/figure-pdf/fig-timeline-1.pdf}}
-
-}
-
-\caption{\label{fig-timeline}Timeline of recent earthquakes on La Palma}
-
-\end{figure}%
-
-\textsubscript{Source:
-\href{https://sds-capstone.github.io/ctmirror-f26/index.qmd.html}{Article
-Notebook}}
-
-\textsubscript{Source:
-\href{https://sds-capstone.github.io/ctmirror-f26/index.qmd.html}{Article
-Notebook}}
-
-Based on data up to and including 1971, eruptions on La Palma happen
-every 79.8 years on average.
+\begin{quote}
+Due to the high-visibility and government sponsorship of the U.S.
+Census, there already exist several modes of access to Census data. The
+Census Bureau publishes their American Consumer Survey microdata as
+interactive and filterable spreadsheets, accessible on their website.
+However, effective use of these spreadsheets requires significant
+background knowledge on Census variables, and it is not accessible to
+the average user. Additionally, while the raw data is accessible from
+the interactive spreadsheets, there are no visualizations.
+\end{quote}
 
 \begin{figure}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{images/la-palma-map.png}}
+\pandocbounded{\includegraphics[keepaspectratio]{images/cbb_image.png}}
 
 }
 
-\caption{\label{fig-map}Map of La Palma}
+\caption{\label{fig-cbb}Census Business Builder User Interface}
 
 \end{figure}%
 
-La Palma is one of the west most islands in the Volcanic Archipelago of
-the Canary Islands (Figure~\ref{fig-map}).
-
-\subsection{Relevant work}\label{relevant-work}
-
-Studies of the magma systems feeding the volcano, such as Marrero et al.
-(2019), have proposed that there are two main magma reservoirs feeding
-the Cumbre Vieja volcano; one in the mantle (30-40km depth) which
-charges and in turn feeds a shallower crustal reservoir (10-20km depth).
-
-Eight eruptions have been recorded since the late 1400s
-(Figure~\ref{fig-timeline}).
+\begin{quote}
+Alternatively, the Census Bureau publishes a data analytics tool called
+the Census Business Builder(US Census Bureau 2026c). This dashboard,
+geared towards small business owners, visualizes census data across a
+variety of geographies, breaking it down by a primary and secondary
+variable as well as a demographic filter. Figure~\ref{fig-cbb} shows a
+screenshot of the Census Business Builder User-Interface with one
+primary variable selected at the county level. But while the Census
+Business Builder is comprehensive, it does not fit the specific needs of
+the CTMirror newsroom. The dashboard has a steep learning curve and is
+not intuitive for a non-technical user. Additionally, it is not built
+for a Connecticut-specific use case. The Census Business Builder has
+data on the state, county, and town level. Connecticut, however, doesn't
+make legislative decisions on the county-level, making State and Town
+the only necessary geographies for this region (Angela Eichhorst 2026).
+Finally, the Census Business Builder does not provide historical
+time-series data.
+\end{quote}
 
 \subsection{Our contribution}\label{our-contribution}
 
-Data and methods are discussed Section~\ref{sec-data} and
-Section~\ref{sec-methods}, respectively.
+\begin{quote}
+This paper presents a new user-friendly, interactive Census Data tool
+that is specifically tailored to the needs of reporters in Connecticut.
+Unlike existing Census data exploration tools, the Connecticut Mirror
+Data Dashboard delivers a time-series analysis of variable trends over
+time. Additionally, the final dashboard is streamlined to provide
+reporters with the most relevant information as quickly as possible, and
+leaving out details that would contribute to user confusion.
+\end{quote}
 
 \section{Data}\label{sec-data}
 
 \begin{quote}
-Data: Where did it come from? What are some basic summary statistics,
-variable definitions, and/or visualizations that help the reader
-understand the data you are working with?
+The U.S. Census Bureau authors the American Community Survey (ACS), a
+publicly available data set used widely by the government (and other
+stakeholders) to understand citizens and make data-driven decisions. It
+comprises an ongoing survey started in 2005 to collect information about
+demographics, education, economics, housing, and more, from sampled
+households across the country (US Census Bureau 2026a). About 3.5
+million residential addresses are sampled yearly (US Census Bureau
+2026b). There are different types of ACS releases, including 1-Year
+Estimates, which contains 12-month data for areas with populations of
+65,000+ individuals, and 5-Year Estimates, which merges 60-month data
+for areas of all population sizes (US Census Bureau 2026b).
 \end{quote}
 
-Read a clean version of data:
+\begin{quote}
+All ACS data covers four main categories: Social Characteristics,
+Housing Characteristics, Economic Characteristics, Demographic and
+Housing Estimates (US Census Bureau 2026a). The ACS organizes its data
+as a tree. Concepts form branches and name a broad table topic, such as
+Median Household Income in the Past 12 Months. Each concept divides into
+subconcepts that break the topic down by categories, such as age group,
+race, or sex. The leaves are individual variables, each of which holds
+one estimate. The full ACS contains approximately 1,200 concepts and
+28,500 subconcepts.
+\end{quote}
 
-\textsubscript{Source:
-\href{https://sds-capstone.github.io/ctmirror-f26/index.qmd.html}{Article
-Notebook}}
-
-Create spatial plot:
-
-\protect\phantomsection\label{cell-fig-spatial-plot}
-\begin{figure}[H]
+\begin{figure}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio,alt={A scatterplot of earthquake locations plotting latitude against longitude.}]{index_files/figure-pdf/fig-spatial-plot-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{images/ct_pop_map.png}}
 
 }
 
-\caption{\label{fig-spatial-plot}Locations of earthquakes on La Palma
-since 2017}
+\caption{\label{fig-towns}Total Population of Towns in Connecticut in
+2024}
 
 \end{figure}%
 
-\textsubscript{Source:
-\href{https://sds-capstone.github.io/ctmirror-f26/index.qmd.html}{Article
-Notebook}}
+\begin{quote}
+For this project, we restrict our dataset to Connecticut. We keep only
+records for the state and its 169 towns. The geographic location and
+2024 total population in these towns is displayed in
+Figure~\ref{fig-towns}. This restriction removes the national scope that
+makes the Census Bureau's own tools hard to navigate and aligns the data
+with the geographic units that Connecticut policy uses. The trend of
+total population of Connecticut in over the last 19 years is represented
+by Figure~\ref{fig-ts}.
+\end{quote}
 
-Figure~\ref{fig-spatial-plot} shows the location of recent Earthquakes
-on La Palma.
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{images/ct_pop_ts.png}}
+
+}
+
+\caption{\label{fig-ts}Connecticut Total Population 2005-2024}
+
+\end{figure}%
 
 \section{Methods}\label{sec-methods}
 
@@ -328,43 +371,6 @@ Methods: What did you actually do? What techniques or methods did you
 employ? What were the specifications for any statistical models you
 used? What software or packages did you use or develop?
 \end{quote}
-
-Let \(x\) denote the number of eruptions in a year. Then, \(x\) can be
-modeled by a Poisson distribution
-
-\begin{equation}\protect\phantomsection\label{eq-poisson}{
-p(x) = \frac{e^{-\lambda} \lambda^{x}}{x !}
-}\end{equation}
-
-where \(\lambda\) is the rate of eruptions per year. Using
-Equation~\ref{eq-poisson}, the probability of an eruption in the next
-\(t\) years can be calculated.
-
-\begin{longtable}[]{@{}ll@{}}
-\caption{Recent historic eruptions on La
-Palma}\label{tbl-history}\tabularnewline
-\toprule\noalign{}
-Name & Year \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-Name & Year \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-Current & 2021 \\
-Teneguía & 1971 \\
-Nambroque & 1949 \\
-El Charco & 1712 \\
-Volcán San Antonio & 1677 \\
-Volcán San Martin & 1646 \\
-Tajuya near El Paso & 1585 \\
-Montaña Quemada & 1492 \\
-\end{longtable}
-
-Table~\ref{tbl-history} summarises the eruptions recorded since the
-colonization of the islands by Europeans in the late 1400s.
 
 \section{Results}\label{results}
 
@@ -425,13 +431,27 @@ ST: Publisher''). 🙄 See
 
 \protect\phantomsection\label{refs}
 \begin{CSLReferences}{1}{1}
-\bibitem[\citeproctext]{ref-marrero2019}
-Marrero, José, Alicia García, Manuel Berrocoso, Ángeles Llinares,
-Antonio Rodríguez-Losada, and R. Ortiz. 2019. {``Strategies for the
-Development of Volcanic Hazard Maps in Monogenetic Volcanic Fields: The
-Example of {La} {Palma} ({Canary} {Islands}).''} \emph{Journal of
-Applied Volcanology} 8 (July).
-\url{https://doi.org/10.1186/s13617-019-0085-5}.
+\bibitem[\citeproctext]{ref-angela_eichhorst_connecticut_2026}
+Angela Eichhorst. 2026. \emph{Connecticut {Mirror} {Project} {Video}}.
+
+\bibitem[\citeproctext]{ref-pazniokas_ct_2026}
+Pazniokas, Mark. 2026. {``{CT} {Mirror} Wins First {Pulitzer} {Prize}
+for '{On} the {Hook}' Series.''} In \emph{CT Mirror}.
+\url{https://ctmirror.org/2026/05/04/ctmirror-pulitzer-prize-on-the-hook-propublica/}.
+
+\bibitem[\citeproctext]{ref-us_census_bureau_american_2026}
+US Census Bureau. 2026a. {``American {Community} {Survey} ({ACS}).''} In
+\emph{Census.gov}.
+\url{https://www.census.gov/programs-surveys/acs.html}.
+
+\bibitem[\citeproctext]{ref-us_census_bureau_american_2026-1}
+US Census Bureau. 2026b. {``American {Community} {Survey} {Information}
+{Guide}.''} In \emph{Census.gov}.
+\url{https://www.census.gov/programs-surveys/acs/about/information-guide.html}.
+
+\bibitem[\citeproctext]{ref-us_census_bureau_census_2026}
+US Census Bureau. 2026c. \emph{Census {Business} {Builder}}.
+\url{https://cbb.census.gov/cbb/\#view=map&industries=00&clusterName=Custom+Industries&geoType=state&dataVariable=33&dashboardVars=15-17-1-64&centerX=-10802692&centerY=4568679&level=4&theme=default&dynHeader=Custom+Region}.
 
 \end{CSLReferences}
 
