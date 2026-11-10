@@ -1,7 +1,8 @@
 # Controls (go in the app's sidebar)
-home_test_sidebar_ui <- function(id) {
+home_sidebar_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    h4("Select & Search Variables"),
     selectInput(ns("beat"), "Beat", choices = NULL),
     selectizeInput(ns("table"), "Variable", choices = NULL,
                    options = list(placeholder = "Type to search...")),
@@ -11,7 +12,7 @@ home_test_sidebar_ui <- function(id) {
 }
 
 # Map and time series (go in the tab body)
-home_test_ui <- function(id) {
+home_ui <- function(id) {
   ns <- NS(id)
   tagList(
     leafletOutput(ns("map")),
@@ -19,7 +20,7 @@ home_test_ui <- function(id) {
   )
 }
 
-home_test_server <- function(id, acs5, acs1) {
+home_server <- function(id, acs5, acs1) {
 
   towns <- acs5 |>
     sf::st_drop_geometry() |>
@@ -46,11 +47,16 @@ home_test_server <- function(id, acs5, acs1) {
 
     updateSelectInput(session, "beat", choices = c("All beats", sort(unique(tables$beat))))
 
+    # The app opens on B01003 (Total Population); after that the box starts empty
+    opened <- reactiveVal(FALSE)
+
     observeEvent(input$beat, {
       in_beat <- if (input$beat == "All beats") tables else filter(tables, beat == input$beat)
       in_beat <- distinct(in_beat, table, concept)
+      selected <- if (!opened() && "B01003" %in% in_beat$table) "B01003" else ""
+      if (selected != "") opened(TRUE)
       updateSelectizeInput(session, "table", choices = setNames(in_beat$table, in_beat$concept),
-                           selected = "", server = TRUE)
+                           selected = selected, server = TRUE)
     })
 
     # Everything about the chosen table
