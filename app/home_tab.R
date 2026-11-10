@@ -260,5 +260,9 @@ home_server <- function(id, acs5, acs1) {
         scale_y_continuous(labels = \(x) format_value(x), limits = c(0, NA)))
       plotly::ggplotly(g, tooltip = "text")
     })
+
+    list(ct = ct, time_series_data = time_series_data, var_label = var_label)
   })
+
+  
 }
