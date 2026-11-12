@@ -5,7 +5,12 @@ home_sidebar_ui <- function(id) {
     h4("Select & Search Variables"),
     selectInput(ns("beat"), "Beat", choices = NULL),
     selectizeInput(ns("table"), "Variable", choices = NULL,
-                   options = list(placeholder = "Type to search...")),
+                   options = list(
+                     placeholder = "Type to search...",
+                     # Empty the box on click so you can type; put the old pick back if you click away
+                     onFocus = I("function() { this.savedValue = this.getValue(); this.clear(true); }"),
+                     onBlur  = I("function() { if (this.getValue() === '') this.setValue(this.savedValue, true); }")
+                   )),
     uiOutput(ns("filters_ui")),
     uiOutput(ns("percent_of_ui"))
   )
@@ -42,19 +47,34 @@ home_server <- function(id, acs5, acs1) {
   # B25140: "Over 50 Percent" is also "Over 30 Percent". B26103/B26203 list only some types.
   share_of_parent <- c("B25140", "B26103", "B26203")
 
+  beat_defaults <- c(
+   "All beats" = "B01003", # Total Population
+   "Demographic" = "B01003", # Total Population
+   "Economy" = "B23025", # Employment Status
+   "Education" = "B15003", # Educational Attainment
+   "Health" = "B27001", # Health Insurance Coverage Status
+   "Housing" = "B25077", # Median Value (Dollars)
+   "Human Services" = "B22003", # Receipt of Food Stamps/SNAP
+   "Immigration" = "B05002", # Place of Birth by Nativity and Citizenship Status
+   "Income" = "B19013", # Median Household Income
+   "Language" = "C16001", # Language Spoken at Home
+   "Race" = "B02001"  # Race
+   )
+
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     updateSelectInput(session, "beat", choices = c("All beats", sort(unique(tables$beat))))
 
-    # The app opens on B01003 (Total Population); after that the box starts empty
+    # The app opens on B01003 (Total Population); after that each beat opens on its default
     opened <- reactiveVal(FALSE)
 
     observeEvent(input$beat, {
       in_beat <- if (input$beat == "All beats") tables else filter(tables, beat == input$beat)
       in_beat <- distinct(in_beat, table, concept)
-      selected <- if (!opened() && "B01003" %in% in_beat$table) "B01003" else ""
-      if (selected != "") opened(TRUE)
+      selected <- if (!opened() && "B01003" %in% in_beat$table) "B01003" else unname(beat_defaults[input$beat])
+      if (!selected %in% in_beat$table) selected <- in_beat$table[1]
+      opened(TRUE)
       updateSelectizeInput(session, "table", choices = setNames(in_beat$table, in_beat$concept),
                            selected = selected, server = TRUE)
     })
