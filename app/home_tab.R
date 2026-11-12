@@ -5,12 +5,7 @@ home_sidebar_ui <- function(id) {
     h4("Select & Search Variables"),
     selectInput(ns("beat"), "Beat", choices = NULL),
     selectizeInput(ns("table"), "Variable", choices = NULL,
-                   options = list(
-                     placeholder = "Type to search...",
-                     # Empty the box on click so you can type; put the old pick back if you click away
-                     onFocus = I("function() { this.savedValue = this.getValue(); this.clear(true); }"),
-                     onBlur  = I("function() { if (this.getValue() === '') this.setValue(this.savedValue, true); }")
-                   )),
+                   options = list(placeholder = "Type to search...")),
     uiOutput(ns("filters_ui")),
     uiOutput(ns("percent_of_ui"))
   )
