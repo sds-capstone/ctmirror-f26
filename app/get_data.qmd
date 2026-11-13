@@ -185,6 +185,9 @@ for (x in years) {
 acs5_ts <- bind_rows(acs5_ts_list) 
 ```
 
+```{r}
+saveRDS(acs5_ts, "app/data/acs5_ts.rds")
+```
  ```{r}
 clean_acs5_ts <- acs5_ts |>
     # separate out the varying town names
