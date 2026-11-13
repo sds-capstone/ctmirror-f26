@@ -104,3 +104,96 @@ clean_acs1 <- acs1_raw |>
 saveRDS(clean_acs1, "app/data/acs1.rds")
 
 ```
+
+# Getting ACS 5-year data for time series  
+```{r}
+start_year <- 2024
+end_year <- 2005
+
+# Initialize data frame
+acs5_ts_list <- list()
+years <- seq(start_year, end_year, -5) # There is no ACS for 2020
+
+# get data for US 
+for (x in years) {
+    for (i in unique(dict$table)) {
+      list_key <- paste0(x, "_", i, "_US")
+        df <- tryCatch(
+        get_acs(
+            geography = "us", 
+            table = i,
+            summary_var = paste0(i, "_001"),
+            survey = "acs5", 
+            geometry = FALSE, 
+            year = x), # get_acs can only take 1 year at a time
+        error = function(e) {
+                    message("Skipping ", x, ": ", conditionMessage(e))
+                    NULL
+                }) 
+        if (is.null(df)) next
+        df <- df |> mutate(year = x)
+        acs5_ts_list[[list_key]] <- df
+    }
+}
+
+# get data for Connecticut 
+for (x in years) {
+    for (i in unique(dict$table)) {
+      list_key <- paste0(x, "_", i, "_CT")
+        df2 <- tryCatch(
+        get_acs(
+            geography = "state", 
+            table = i,
+            state = "CT", 
+            summary_var = paste0(i, "_001"),
+            survey = "acs5", 
+            geometry = FALSE, 
+            year = x), # get_acs can only take 1 year at a time
+        error = function(e) {
+                    message("Skipping ", x, ": ", conditionMessage(e))
+                    NULL
+                }) 
+        if (is.null(df2)) next
+        df2 <- df2 |> mutate(year = x)
+        acs5_ts_list[[list_key]] <- df2
+    }
+}
+
+# Get data for all towns
+for (x in years) {
+    for (i in unique(dict$table)) {
+      list_key <- paste0(x, "_", i, "_town")
+        df3 <- tryCatch(
+        get_acs(
+            geography = "county subdivision", 
+            table = i,
+            state = "CT", 
+            summary_var = paste0(i, "_001"),
+            survey = "acs5", 
+            geometry = FALSE, 
+            year = x), # get_acs can only take 1 year at a time
+        error = function(e) {
+                    message("Skipping ", x, ": ", conditionMessage(e))
+                    NULL
+                }) 
+        if (is.null(df3)) next
+        df3 <- df3 |> mutate(year = x)
+        acs5_ts_list[[list_key]] <- df3
+    }
+}
+ 
+acs5_ts <- bind_rows(acs5_ts_list) 
+```
+
+ ```{r}
+clean_acs5_ts <- acs5_ts |>
+    # separate out the varying town names
+    separate_wider_delim(NAME, delim = "town,", names = c("geo_name", "Region"), too_few = "align_start") |>
+    subset(select = -c(GEOID, Region)) |>
+    left_join(dict, by = "variable") |>
+    mutate(pct = (estimate / summary_est)*100)
+saveRDS(clean_acs5_ts, "app/data/acs5_ts.rds")
+
+```
+
+
