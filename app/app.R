@@ -8,9 +8,11 @@ library(plotly)
 source("ingest.R")
 source("table_dimensions.R")
 source("home_tab.R")
+source("advanced_tab.R")
 
 acs5 <- readRDS("data/acs5.rds")
 acs1 <- readRDS("data/acs1.rds")
+asc5_ts <- readRDS("data/acs5_ts.rds")
 options(tigris_use_cache = TRUE)
 
 # Define UI for app
@@ -24,7 +26,7 @@ ui <- page_sidebar(
   navset_tab(
     nav_panel("Home", home_ui("home")),
     nav_panel(
-      "Advanced", "Coming soon!"
+      "Advanced", advanced_ui("advanced")
     ),
     nav_panel(
       "Find variables", "Coming soon!"

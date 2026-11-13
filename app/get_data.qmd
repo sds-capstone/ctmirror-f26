@@ -186,7 +186,7 @@ acs5_ts <- bind_rows(acs5_ts_list)
 ```
 
 ```{r}
-saveRDS(acs5_ts, "app/data/acs5_ts.rds")
+saveRDS(acs5_ts, "app/data/acs5_ts_raw.rds")
 ```
  ```{r}
 clean_acs5_ts <- acs5_ts |>
@@ -195,8 +195,11 @@ clean_acs5_ts <- acs5_ts |>
     subset(select = -c(GEOID, Region)) |>
     left_join(dict, by = "variable") |>
     mutate(pct = (estimate / summary_est)*100)
-saveRDS(clean_acs5_ts, "app/data/acs5_ts.rds")
 
+```
+
+```{r}
+saveRDS(clean_acs5_ts, "app/data/acs5_ts.rds")
 ```
 
 
