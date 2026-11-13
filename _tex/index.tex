@@ -67,6 +67,8 @@
 
 
 \usepackage{longtable,booktabs,array}
+\usepackage{caption}
+\captionsetup[table]{skip=6pt}
 \newcounter{none} % for unnumbered tables
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
@@ -74,9 +76,6 @@
 \makeatletter
 \patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
 \makeatother
-% Allow footnotes in longtable head/foot
-\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
-\makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
 \newsavebox\pandoc@box
@@ -204,7 +203,7 @@
 \title{Connecticut Mirror Data Dashboard}
 \author{Nicole Choi \and Zoe Khan \and Bayansulu Tulepbayeva \and Ellie
 Zdancewic}
-\date{2026-11-12}
+\date{2026-11-13}
 \begin{document}
 \maketitle
 \begin{abstract}
