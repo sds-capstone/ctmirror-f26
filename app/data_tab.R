@@ -1,5 +1,15 @@
 # Module - Data tab
 
+clean_table <- function(d) {
+  d <- d |>
+    select(-any_of(c("value", "tooltip"))) |>
+    rename(any_of(c(Year = "year", Town = "town", Estimate = "count",
+                    Percent = "pct", `Out of` = "denom"))) |>
+    drop_na()
+  if (all(d$Percent == 100)) d <- select(d, -Percent, -`Out of`)
+  d
+}
+
 data_UI <- function(id) {
   ns <- NS(id)
   tagList(
