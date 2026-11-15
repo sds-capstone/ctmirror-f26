@@ -26,9 +26,7 @@ ui <- page_sidebar(
 
   navset_tab(
     nav_panel("Home", home_ui("home")),
-    nav_panel(
-      "Advanced", advanced_ui("advanced")
-    ),
+    nav_panel("Advanced", advanced_ui("advanced")),
     nav_panel(
       "Find variables", "Coming soon!"
     ),
@@ -42,8 +40,8 @@ ui <- page_sidebar(
 # Define server logic
 server <- function(input, output, session) {
   dfs <- home_server("home", acs5, acs1)
+  dfs <- home_server("advanced", acs5, acs1)
   data_Server("data", ct = dfs$ct, time_series_data = dfs$time_series_data, dfs$var_label)
-
 }
 
 shinyApp(ui = ui, server = server)
