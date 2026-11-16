@@ -20,20 +20,20 @@ home_ui <- function(id) {
   )
 }
 
-home_server <- function(id, acs5, acs1) {
+home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
 
-  towns <- acs5 |>
+  towns <- reactive({acs5() |>
     sf::st_drop_geometry() |>
-    filter(!str_detect(town, "not defined"))
-  shapes <- acs5[!duplicated(acs5$GEOID) & !str_detect(acs5$town, "not defined"), c("GEOID", "town")]
+    filter(!str_detect(town, "not defined"))})
+  shapes <- reactive({acs5()[!duplicated(acs5()$GEOID) & !str_detect(acs5()$town, "not defined"), c("GEOID", "town")]})
 
   # One row per table per beat, only tables that are in acs5
-  tables <- vars |>
-    filter(table %in% towns$table) |>
+  tables <- reactive({vars |>
+    filter(table %in% towns()$table) |>
     distinct(table, concept, beats) |>
     separate_longer_delim(beats, delim = ",") |>
     mutate(beat = str_to_title(str_squish(beats))) |>
-    filter(!is.na(beat), beat != "Meta")
+    filter(!is.na(beat), beat != "Meta")})
 
   # Medians, indexes etc. can't be added up: show one line at a time instead
   not_additive <- "\\b(median|mean|average|per capita|aggregate|gini|index)\\b"
@@ -59,24 +59,65 @@ home_server <- function(id, acs5, acs1) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    updateSelectInput(session, "beat", choices = c("All beats", sort(unique(tables$beat))))
-
     # The app opens on B01003 (Total Population); after that each beat opens on its default
     opened <- reactiveVal(FALSE)
+    # Signal to sidebar that an ad hoc call has just been fetched
+    target <- reactiveVal(NULL)
 
-    observeEvent(input$beat, {
-      in_beat <- if (input$beat == "All beats") tables else filter(tables, beat == input$beat)
-      in_beat <- distinct(in_beat, table, concept)
-      selected <- if (!opened() && "B01003" %in% in_beat$table) "B01003" else unname(beat_defaults[input$beat])
-      if (!selected %in% in_beat$table) selected <- in_beat$table[1]
+    # If user has requested an ad hoc variable then target is supplied with that variable's id
+    observeEvent(jump_to(), {
+      req(jump_to()$id)
+      target(jump_to()$id)
+    }, priority = 10)
+
+    # Beat dropdown selection runs at startup and after ad-hoc calls
+    observeEvent(tables(), {
+      updateSelectInput(
+        session, "beat",
+        choices  = c("All beats", sort(unique(tables()$beat))),
+        selected = if (!is.null(target())) "All beats" else isolate(input$beat) %||% "All beats" # Set to All Beats when unknown ad hoc is called
+      )
+    }, priority = 5)
+
+    # Variable dropdown selection runs when beat changes or when ad hoc variable is fetched
+    observeEvent(list(input$beat, tables()), {
+      req(input$beat)
+      d <- tables()
+      if (input$beat != "All beats") d <- d[d$beat == input$beat, ] # keep only a beat's rows if selected
+      d <- distinct(d, table, concept)
+
+      selected <- if (!is.null(target()) && target() %in% d$table) { # selects ad hoc call if one has been just fetched
+        target()
+      } else if (!opened() && "B01003" %in% d$table) { # select Total Pop otherwise if user has not selected anything
+        "B01003"
+      } else { # otherwise just land on defaults
+        unname(beat_defaults[input$beat])
+      }
+
+      if (identical(selected, target())) target(NULL)  # refresh the target signal until next ad hoc call
       opened(TRUE)
-      updateSelectizeInput(session, "table", choices = setNames(in_beat$table, in_beat$concept),
-                           selected = selected, server = TRUE)
+
+      # Allows user to select from dropdown
+      updateSelectizeInput(session, "table",
+                          choices  = setNames(d$table, d$concept),
+                          selected = selected, server = TRUE)
     })
+
+    # Commented out old sidebar design just in case!
+    # observeEvent(input$beat, {
+    #   in_beat <- if (input$beat == "All beats") tables() else filter(tables(), beat == input$beat)
+    #   in_beat <- distinct(in_beat, table, concept)
+    #   selected <- if (!opened() && "B01003" %in% in_beat$table) "B01003" else unname(beat_defaults[input$beat])
+    #   if (!selected %in% in_beat$table) selected <- in_beat$table[1]
+    #   opened(TRUE)
+    #   updateSelectizeInput(session, "table", choices = setNames(in_beat$table, in_beat$concept),
+    #                        selected = selected, server = TRUE)
+    # })
 
     # Everything about the chosen table
     tbl <- reactive({
       req(input$table)
+      tables <- tables()
       concept <- tables$concept[tables$table == input$table][1]
       leaves <- filter(table_dimensions, table == input$table)
       list(
@@ -221,12 +262,12 @@ home_server <- function(id, acs5, acs1) {
 
     # Every town stays on the map; towns with nobody in the table (0 of 0) are gray
     ct <- reactive({
-      left_join(shapes, summarise_codes(towns, "GEOID"), by = "GEOID") |>
+      left_join(shapes(), summarise_codes(towns(), "GEOID"), by = "GEOID") |>
         mutate(value = if_else(is.finite(value), value, NA))
     })
 
     time_series_data <- reactive({
-      summarise_codes(acs1, "year") |>
+      summarise_codes(acs1(), "year") |>
         filter(is.finite(value)) |>
         mutate(tooltip = paste0(year, ": ", format_value(value)))
     })
