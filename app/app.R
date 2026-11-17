@@ -26,7 +26,7 @@ ui <- page_sidebar(
   fillable = FALSE,
 
   # One sidebar for the whole app
-  sidebar = sidebar(home_sidebar_ui("home")),
+  sidebar = sidebar(home_sidebar_ui("home"), width = 320),
 
   navset_tab(
     nav_panel("Home", home_ui("home")),
