@@ -3,9 +3,42 @@ home_sidebar_ui <- function(id) {
   ns <- NS(id)
   tagList(
     h4("Select & Search Variables"),
-    selectInput(ns("beat"), "Beat", choices = NULL),
-    selectizeInput(ns("table"), "Variable", choices = NULL,
-                   options = list(placeholder = "Type to search...")),
+    # Open menu is exactly as wide as the selected box; long option text wraps instead of widening it
+    tags$style(HTML("
+      .bs-container .dropdown-menu,
+      .bootstrap-select .dropdown-menu { min-width: 0 !important; max-width: 100%; }
+      .bs-container .dropdown-menu li a span.text,
+      .bootstrap-select .dropdown-menu li a span.text { white-space: normal; }
+      .bs-container .dropdown-menu .inner,
+      .bootstrap-select .dropdown-menu .inner { overflow-x: hidden; }
+    ")),
+    # Beat and Variable share the same look: dropdown with a search bar inside the open panel.
+    # Beat starts with "All beats" already selected so the app never opens on a blank beat.
+    shinyWidgets::pickerInput(
+      ns("beat"), "Beat",
+      choices = "All beats", selected = "All beats",
+      width = "100%",
+      options = shinyWidgets::pickerOptions(
+        liveSearch = TRUE,
+        liveSearchPlaceholder = "Search beats...",
+        liveSearchNormalize = TRUE,
+        container = "body",
+        size = 10
+      )
+    ),
+    shinyWidgets::pickerInput(
+      ns("table"), "Variable",
+      choices = NULL,
+      width = "100%",
+      options = shinyWidgets::pickerOptions(
+        liveSearch = TRUE,
+        liveSearchPlaceholder = "Search variables...",
+        liveSearchNormalize = TRUE,
+        container = "body",
+        size = 10,
+        noneResultsText = "No variables match {0}"
+      )
+    ),
     uiOutput(ns("filters_ui")),
     uiOutput(ns("percent_of_ui"))
   )
@@ -72,10 +105,12 @@ home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
 
     # Beat dropdown selection runs at startup and after ad-hoc calls
     observeEvent(tables(), {
-      updateSelectInput(
+      current <- isolate(input$beat)
+      shinyWidgets::updatePickerInput(
         session, "beat",
         choices  = c("All beats", sort(unique(tables()$beat))),
-        selected = if (!is.null(target())) "All beats" else isolate(input$beat) %||% "All beats" # Set to All Beats when unknown ad hoc is called
+        # All Beats when an ad hoc variable was just fetched, or when nothing valid is selected yet
+        selected = if (!is.null(target()) || !isTruthy(current)) "All beats" else current
       )
     }, priority = 5)
 
@@ -97,10 +132,10 @@ home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
       if (identical(selected, target())) target(NULL)  # refresh the target signal until next ad hoc call
       opened(TRUE)
 
-      # Allows user to select from dropdown
-      updateSelectizeInput(session, "table",
-                          choices  = setNames(d$table, d$concept),
-                          selected = selected, server = TRUE)
+      # Allows user to select from dropdown (search bar lives inside the open panel)
+      shinyWidgets::updatePickerInput(session, "table",
+                                      choices  = setNames(d$table, d$concept),
+                                      selected = selected)
     })
 
     # Commented out old sidebar design just in case!
