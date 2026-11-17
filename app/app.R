@@ -8,6 +8,7 @@ library(plotly)
 library(readxl)
 library(DT)
 library(shinyjs)
+library(shinyWidgets)
 source("ingest.R") # need this for find_variables tab
 source("table_dimensions.R")
 source("home_tab.R")

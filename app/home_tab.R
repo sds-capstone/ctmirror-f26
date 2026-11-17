@@ -4,8 +4,18 @@ home_sidebar_ui <- function(id) {
   tagList(
     h4("Select & Search Variables"),
     selectInput(ns("beat"), "Beat", choices = NULL),
-    selectizeInput(ns("table"), "Variable", choices = NULL,
-                   options = list(placeholder = "Type to search...")),
+    # Dropdown with a search bar inside the open panel, below the selected variable
+    shinyWidgets::pickerInput(
+      ns("table"), "Variable",
+      choices = NULL,
+      options = shinyWidgets::pickerOptions(
+        liveSearch = TRUE,
+        liveSearchPlaceholder = "Search variables...",
+        liveSearchNormalize = TRUE,
+        size = 10,
+        noneResultsText = "No variables match {0}"
+      )
+    ),
     uiOutput(ns("filters_ui")),
     uiOutput(ns("percent_of_ui"))
   )
@@ -97,10 +107,10 @@ home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
       if (identical(selected, target())) target(NULL)  # refresh the target signal until next ad hoc call
       opened(TRUE)
 
-      # Allows user to select from dropdown
-      updateSelectizeInput(session, "table",
-                          choices  = setNames(d$table, d$concept),
-                          selected = selected, server = TRUE)
+      # Allows user to select from dropdown (search bar lives inside the open panel)
+      shinyWidgets::updatePickerInput(session, "table",
+                                      choices  = setNames(d$table, d$concept),
+                                      selected = selected)
     })
 
     # Commented out old sidebar design just in case!
