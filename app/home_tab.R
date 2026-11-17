@@ -328,9 +328,9 @@ home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
       tags$p(
         class = "text-muted small mt-2",
         "Map: ", acs5_end_year - 4, "–", acs5_end_year, " American Community Survey (ACS) ",
-        "5-year estimates. These pool five years of survey responses, which makes them reliable ",
-        "enough to report for every town, but less current than 1-year estimates. ",
-        "Estimates for smaller towns are less precise; their margins of error are larger and are not shown on this map."
+        "5-year estimates. These estimates pool five years of survey responses, which makes them reliable ",
+        "for every town in Connecticut. However, these estimates are less current than 1-year ACS data.",
+      
       )
     })
 
