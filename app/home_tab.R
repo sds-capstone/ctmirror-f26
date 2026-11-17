@@ -11,12 +11,18 @@ home_sidebar_ui <- function(id) {
   )
 }
 
+# Last year of the ACS 5-year window behind data/acs5.rds (the file has no year column).
+# Update this when the data is refreshed; the map caption reads from it.
+acs5_end_year <- 2024
+
 # Map and time series (go in the tab body)
 home_ui <- function(id) {
   ns <- NS(id)
   tagList(
     leafletOutput(ns("map")),
-    plotlyOutput(ns("time_series"))
+    uiOutput(ns("map_caption")),
+    plotlyOutput(ns("time_series")),
+    uiOutput(ns("trend_caption"))
   )
 }
 
@@ -315,6 +321,45 @@ home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
         labs(title = paste0("Statewide Summary: ", var_label()), x = "Year", y = NULL) +
         scale_y_continuous(labels = \(x) format_value(x), limits = c(0, NA)))
       plotly::ggplotly(g, tooltip = "text")
+    })
+
+    # Captions: where the numbers come from (one under the map, one under the trend)
+    output$map_caption <- renderUI({
+      tags$p(
+        class = "text-muted small mt-2",
+        "Map: ", acs5_end_year - 4, "–", acs5_end_year, " American Community Survey (ACS) ",
+        "5-year estimates. These pool five years of survey responses, which makes them reliable ",
+        "enough to report for every town, but less current than 1-year estimates. ",
+        "Margins of error are proportionally larger for smaller towns."
+      )
+    })
+
+    # Wording follows the selected variable (ad hoc variables may lack 1-year data)
+    output$trend_caption <- renderUI({
+      req(input$table)
+      y1 <- sort(unique(as.numeric(acs1()$year[startsWith(acs1()$variable, paste0(input$table, "_"))])))
+      y1 <- y1[is.finite(y1)]
+
+      if (length(y1) == 0) {
+        text <- "Trend: no ACS 1-year data is available for this variable, so there is no statewide time series."
+      } else {
+        gaps <- setdiff(seq(min(y1), max(y1)), y1)
+        # Collapse runs of missing years: c(2006:2015, 2020) -> "2006–2015", "2020"
+        as_ranges <- function(x) {
+          runs <- split(x, cumsum(c(1, diff(x) != 1)))
+          vapply(runs, \(r) if (length(r) == 1) as.character(r) else paste0(min(r), "–", max(r)), character(1))
+        }
+        text <- paste0(
+          "Trend: statewide ACS 1-year estimates, ", min(y1),
+          if (max(y1) > min(y1)) paste0("–", max(y1)),
+          if (length(gaps) > 0) paste0(" (no data for ", paste(as_ranges(gaps), collapse = ", "),
+                                       if (2020 %in% gaps) "; the Census Bureau did not publish standard 1-year estimates for 2020", ")"),
+          ". 1-year estimates are the most current, but they come from a smaller sample and are only ",
+          "published for areas with 65,000+ residents, so they are not available for most towns. ",
+          "They can differ from the 5-year estimates on the map, so compare the two with care."
+        )
+      }
+      tags$p(class = "text-muted small mt-2", text)
     })
 
     list(ct = ct, time_series_data = time_series_data, var_label = var_label)
