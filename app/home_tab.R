@@ -12,15 +12,16 @@ home_sidebar_ui <- function(id) {
 }
 
 # Map and time series (go in the tab body)
-home_ui <- function(id) {
+home_ui <- function(id, acs5_ts) {
   ns <- NS(id)
   tagList(
     leafletOutput(ns("map")),
-    plotlyOutput(ns("time_series"))
+    plotlyOutput(ns("time_series")),
+    plotlyOutput(ns("multi_time_series"))
   )
 }
 
-home_server <- function(id, acs5, acs1) {
+home_server <- function(id, acs5, acs1, acs5_ts) {
 
   towns <- acs5 |>
     sf::st_drop_geometry() |>
@@ -231,6 +232,20 @@ home_server <- function(id, acs5, acs1) {
         mutate(tooltip = paste0(year, ": ", format_value(value)))
     })
 
+    multi_time_series_data <- reactive({
+      # a lot of the work for the multi time series is going to go on here 
+      # or perhaps in additional functions that I create earlier and call here
+      # we want: the geo_name column to still be present 
+
+      # when the checkbox for nation/ct/town is selected, it filters 
+      # geo_name to just what is selected? 
+      # then use aes(color = geo_name) to display the lines on the chart 
+      # is there a better way? 
+      summarise_codes(acs5_ts, c("geo_name", "year")) |>
+        filter(is.finite(value)) |>
+        mutate(tooltip = paste0(year, ": ", format_value(value))) 
+    })
+
     # Map (same as the main Home map; hover also shows the count for percents)
     output$map <- renderLeaflet({
       d <- ct()
@@ -272,6 +287,19 @@ home_server <- function(id, acs5, acs1) {
         geom_point(aes(text = tooltip)) +
         theme_minimal() +
         labs(title = paste0("Statewide Summary: ", var_label()), x = "Year", y = NULL) +
+        scale_y_continuous(labels = \(x) format_value(x), limits = c(0, NA)))
+      plotly::ggplotly(g, tooltip = "text")
+    })
+
+    # Multi-Time series (same as the main Home one)
+    output$multi_time_series <- renderPlotly({
+      d <- multi_time_series_data()
+      validate(need(nrow(d) > 0, "No 5-year data for this selection."))
+      g <- suppressWarnings(ggplot(d, aes(x = year, y = value)) +
+        geom_line(aes(color = geo_name), linewidth = 0.8) +
+        geom_point(aes(text = tooltip)) +
+        theme_minimal() +
+        labs(title = paste0("US vs. State vs. Town: ", var_label()), x = "Year", y = NULL) +
         scale_y_continuous(labels = \(x) format_value(x), limits = c(0, NA)))
       plotly::ggplotly(g, tooltip = "text")
     })

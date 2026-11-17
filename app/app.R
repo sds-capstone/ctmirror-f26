@@ -13,7 +13,7 @@ source("data_tab.R")
 
 acs5 <- readRDS("data/acs5.rds")
 acs1 <- readRDS("data/acs1.rds")
-asc5_ts <- readRDS("data/acs5_ts.rds")
+acs5_ts <- readRDS("data/acs5_ts.rds")
 options(tigris_use_cache = TRUE)
 
 # Define UI for app
@@ -25,8 +25,8 @@ ui <- page_sidebar(
   sidebar = sidebar(home_sidebar_ui("home")),
 
   navset_tab(
-    nav_panel("Home", home_ui("home")),
-    nav_panel("Advanced", advanced_ui("advanced")),
+    nav_panel("Home", home_ui("home", acs5_ts)),
+    nav_panel("Advanced", "", advanced_ui("advanced")),
     nav_panel(
       "Find variables", "Coming soon!"
     ),
@@ -39,8 +39,7 @@ ui <- page_sidebar(
 
 # Define server logic
 server <- function(input, output, session) {
-  dfs <- home_server("home", acs5, acs1)
-  dfs <- home_server("advanced", acs5, acs1)
+  dfs <- home_server("home", acs5, acs1, acs5_ts)
   data_Server("data", ct = dfs$ct, time_series_data = dfs$time_series_data, dfs$var_label)
 }
 
