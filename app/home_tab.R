@@ -330,7 +330,7 @@ home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
         "Map: ", acs5_end_year - 4, "–", acs5_end_year, " American Community Survey (ACS) ",
         "5-year estimates. These pool five years of survey responses, which makes them reliable ",
         "enough to report for every town, but less current than 1-year estimates. ",
-        "Margins of error are proportionally larger for smaller towns."
+        "Estimates for smaller towns are less precise; their margins of error are larger and are not shown on this map."
       )
     })
 
