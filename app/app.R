@@ -22,7 +22,25 @@ options(tigris_use_cache = TRUE)
 
 # Define UI for app
 ui <- page_sidebar(
-  title = "Connecticut Mirror Data Dashboard",
+  title = tags$div(
+    style = "display: flex; align-items: center; gap: 14px; line-height: 1; margin: 0;",
+    tags$a(
+      href = "https://ctmirror.org/",
+      target = "_blank",
+      rel = "noopener",
+      style = "display: flex; align-items: center;",
+      tags$img(
+        src = "ctmirror_logo.png",
+        alt = "CT Mirror",
+        style = "display: block; height: 38px; width: auto;"
+      )
+    ),
+    tags$div(style = "width: 1px; height: 28px; background: #c9c9c9;"), #thin vertical divider
+    tags$span(
+      "Data Dashboard",
+      style = "display: block; margin: 0; font-size: 1.15rem; font-weight: 600; color: #333; letter-spacing: 0.02em; padding-top: 6px"
+    )
+  ),
   fillable = FALSE,
 
   # One sidebar for the whole app
