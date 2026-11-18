@@ -20,12 +20,58 @@ acs5 <- readRDS("data/acs5.rds")
 acs1 <- readRDS("data/acs1.rds")
 options(tigris_use_cache = TRUE)
 
+# Brand tokens: estimated from logo and CT Mirror website
+ctm_red   <- "#b80000"   
+ctm_dark  <- "#1a1a1a"
+ctm_gray  <- "#5f6368"
+ctm_light <- "#f6f6f6"
+ctm_serif <- "Georgia, 'Times New Roman', serif"        # headings
+ctm_sans  <- "-apple-system, 'Helvetica Neue', Arial, sans-serif"  # body
+ 
+ctm_theme <- bs_theme(
+  version = 5,
+  bg = "#ffffff", fg = ctm_dark,
+  primary = ctm_red,
+  secondary = ctm_gray,
+  base_font = ctm_sans,
+  heading_font = ctm_serif
+) |>
+  bs_add_rules("
+    /* Header: white with a red rule, like the site's masthead */
+    .bslib-page-sidebar > header {
+      background: #fff !important;
+      border-bottom: 3px solid #b80000;
+      padding: 8px 16px;
+    }
+
+    /* Tabs: red underline for the active tab */
+    .nav-tabs .nav-link { color: #5f6368; font-weight: 600; border: none; }
+    .nav-tabs .nav-link:hover { color: #b80000; }
+    .nav-tabs .nav-link.active {
+      color: #b80000; background: transparent;
+      border-bottom: 3px solid #b80000;
+    }
+
+    /* Sidebar: light gray panel with uppercase section labels */
+    .bslib-sidebar-layout > .sidebar { background: #f6f6f6; }
+    .sidebar label.control-label {
+      text-transform: uppercase; letter-spacing: .04em;
+      font-size: .75rem; font-weight: 700; color: #5f6368;
+    }
+
+    /* Buttons and links */
+    .btn-primary { background: #b80000; border-color: #b80000; }
+    .btn-primary:hover { background: #8f0000; border-color: #8f0000; }
+    a { color: #b80000; }
+  ")
+
 # Define UI for app
 ui <- page_sidebar(
+  theme = ctm_theme,
   title = tags$div(
     style = "display: flex; align-items: center; gap: 14px; line-height: 1; margin: 0;",
     tags$a(
-      href = "https://ctmirror.org/",
+      href = "https://ctmirror.org/", # links to CT Mirror's website
       target = "_blank",
       rel = "noopener",
       style = "display: flex; align-items: center;",
