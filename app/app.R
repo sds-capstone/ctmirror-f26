@@ -11,6 +11,7 @@ library(shinyjs)
 library(shinyWidgets)
 source("ingest.R") # need this for find_variables tab
 source("table_dimensions.R")
+source("sidebar.R")
 source("home_tab.R")
 source("data_tab.R")
 source("find_variables_tab.R")
@@ -89,20 +90,22 @@ ui <- page_sidebar(
   ),
   fillable = FALSE,
 
-  # One sidebar for the whole app
-  sidebar = sidebar(home_sidebar_ui("home"), width = 320),
+  # One sidebar for the whole app (sidebar.R); every tab reads its selection
+  sidebar = sidebar(sidebar_ui("sidebar"), width = 320),
 
+  # id + values let the sidebar know which tab is open
   navset_tab(
-    nav_panel("Home", home_ui("home")),
+    id = "tabs",
+    nav_panel("Home", value = "home", home_ui("home")),
     nav_panel(
-      "Advanced", "Coming soon!"
+      "Advanced", value = "advanced", "Coming soon!"
     ),
     nav_panel(
-      "Find variables", "",
+      "Find variables", value = "find_variables",
       find_variables_ui("find_variables")
     ),
     nav_panel(
-      "Data", "", 
+      "Data", value = "data",
       data_UI("data")
     )
   )
@@ -143,7 +146,11 @@ server <- function(input, output, session) {
     new_table(list(id = i$table, at = Sys.time()))
   })
 
-  dfs <- home_server("home", acs5 = main_acs5, acs1 = main_acs1, jump_to = new_table) # jump_to signals the sidebar to select the recently fetched ad hoc variable
+  # The shared sidebar; jump_to tells it to select the variable just fetched on Find variables
+  selection <- sidebar_server("sidebar", acs5 = main_acs5,
+                              active_tab = reactive(input$tabs), jump_to = new_table)
+
+  dfs <- home_server("home", acs5 = main_acs5, acs1 = main_acs1, sel = selection)
   data_Server("data", ct = dfs$ct, time_series_data = dfs$time_series_data, dfs$var_label)
 
 }

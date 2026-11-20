@@ -1,52 +1,5 @@
-# Controls (go in the app's sidebar)
-home_sidebar_ui <- function(id) {
-  ns <- NS(id)
-  tagList(
-    tags$div(                        # DO NOT REMOVE THIS EMPTY DIV - fixes the Shiny client error "Unable to find selectize-plugin-a11y plugin"
-      style = "display:none;",       # Forces Selectize dependencies/plugins to load up front rather than dynamically
-      selectizeInput("selectize_preload", label = NULL, choices = NULL)  
-    ),
-    h4("Select & Search Variables"),
-    # Open menu is exactly as wide as the selected box; long option text wraps instead of widening it
-    tags$style(HTML("
-      .bs-container .dropdown-menu,
-      .bootstrap-select .dropdown-menu { min-width: 0 !important; max-width: 100%; }
-      .bs-container .dropdown-menu li a span.text,
-      .bootstrap-select .dropdown-menu li a span.text { white-space: normal; }
-      .bs-container .dropdown-menu .inner,
-      .bootstrap-select .dropdown-menu .inner { overflow-x: hidden; }
-    ")),
-    # Beat and Variable share the same look: dropdown with a search bar inside the open panel.
-    # Beat starts with "All beats" already selected so the app never opens on a blank beat.
-    shinyWidgets::pickerInput(
-      ns("beat"), "Beat",
-      choices = "All beats", selected = "All beats",
-      width = "100%",
-      options = shinyWidgets::pickerOptions(
-        liveSearch = TRUE,
-        liveSearchPlaceholder = "Search beats...",
-        liveSearchNormalize = TRUE,
-        container = "body",
-        size = 10
-      )
-    ),
-    shinyWidgets::pickerInput(
-      ns("table"), "Variable",
-      choices = NULL,
-      width = "100%",
-      options = shinyWidgets::pickerOptions(
-        liveSearch = TRUE,
-        liveSearchPlaceholder = "Search variables...",
-        liveSearchNormalize = TRUE,
-        container = "body",
-        size = 10,
-        noneResultsText = "No variables match {0}"
-      )
-    ),
-    uiOutput(ns("filters_ui")),
-    uiOutput(ns("percent_of_ui"))
-  )
-}
+# Module - Home tab (map and statewide trend)
+# The controls live in the app-wide sidebar (sidebar.R); this module only reads its selection.
 
 # Last year of the ACS 5-year window behind data/acs5.rds (the file has no year column).
 # Update this when the data is refreshed; the map caption reads from it.
@@ -63,167 +16,30 @@ home_ui <- function(id) {
   )
 }
 
-home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
+# sel: the selection returned by sidebar_server() (tbl, picks, percent_of)
+home_server <- function(id, acs5, acs1, sel) {
 
   towns <- reactive({acs5() |>
     sf::st_drop_geometry() |>
     filter(!str_detect(town, "not defined"))})
   shapes <- reactive({acs5()[!duplicated(acs5()$GEOID) & !str_detect(acs5()$town, "not defined"), c("GEOID", "town")]})
 
-  # One row per table per beat, only tables that are in acs5
-  tables <- reactive({vars |>
-    filter(table %in% towns()$table) |>
-    distinct(table, concept, beats) |>
-    separate_longer_delim(beats, delim = ",") |>
-    mutate(beat = str_to_title(str_squish(beats))) |>
-    filter(!is.na(beat), beat != "Meta")})
-
-  # Medians, indexes etc. can't be added up: show one line at a time instead
-  not_additive <- "\\b(median|mean|average|per capita|aggregate|gini|index)\\b"
-  # Lines overlap or leave people out, so they can't be added up either. Each line is shown
-  # as a percent of the line above it instead ("Rented > Over 30 Percent" = % of renters).
-  # B25140: "Over 50 Percent" is also "Over 30 Percent". B26103/B26203 list only some types.
-  share_of_parent <- c("B25140", "B26103", "B26203")
-
-  beat_defaults <- c(
-   "All beats" = "B01003", # Total Population
-   "Demographic" = "B01003", # Total Population
-   "Economy" = "B23025", # Employment Status
-   "Education" = "B15003", # Educational Attainment
-   "Health" = "B27001", # Health Insurance Coverage Status
-   "Housing" = "B25077", # Median Value (Dollars)
-   "Human Services" = "B22003", # Receipt of Food Stamps/SNAP
-   "Immigration" = "B05002", # Place of Birth by Nativity and Citizenship Status
-   "Income" = "B19013", # Median Household Income
-   "Language" = "C16001", # Language Spoken at Home
-   "Race" = "B02001"  # Race
-   )
-
   moduleServer(id, function(input, output, session) {
-    ns <- session$ns
-
-    # The app opens on B01003 (Total Population); after that each beat opens on its default
-    opened <- reactiveVal(FALSE)
-    # Signal to sidebar that an ad hoc call has just been fetched
-    target <- reactiveVal(NULL)
-
-    # If user has requested an ad hoc variable then target is supplied with that variable's id
-    observeEvent(jump_to(), {
-      req(jump_to()$id)
-      target(jump_to()$id)
-    }, priority = 10)
-
-    # Beat dropdown selection runs at startup and after ad-hoc calls
-    observeEvent(tables(), {
-      current <- isolate(input$beat)
-      shinyWidgets::updatePickerInput(
-        session, "beat",
-        choices  = c("All beats", sort(unique(tables()$beat))),
-        # All Beats when an ad hoc variable was just fetched, or when nothing valid is selected yet
-        selected = if (!is.null(target()) || !isTruthy(current)) "All beats" else current
-      )
-    }, priority = 5)
-
-    # Variable dropdown selection runs when beat changes or when ad hoc variable is fetched
-    observeEvent(list(input$beat, tables()), {
-      req(input$beat)
-      d <- tables()
-      if (input$beat != "All beats") d <- d[d$beat == input$beat, ] # keep only a beat's rows if selected
-      d <- distinct(d, table, concept)
-
-      selected <- if (!is.null(target()) && target() %in% d$table) { # selects ad hoc call if one has been just fetched
-        target()
-      } else if (!opened() && "B01003" %in% d$table) { # select Total Pop otherwise if user has not selected anything
-        "B01003"
-      } else { # otherwise just land on defaults
-        unname(beat_defaults[input$beat])
-      }
-
-      if (identical(selected, target())) target(NULL)  # refresh the target signal until next ad hoc call
-      opened(TRUE)
-
-      # Allows user to select from dropdown (search bar lives inside the open panel)
-      shinyWidgets::updatePickerInput(session, "table",
-                                      choices  = setNames(d$table, d$concept),
-                                      selected = selected)
-    })
-
-    # Commented out old sidebar design just in case!
-    # observeEvent(input$beat, {
-    #   in_beat <- if (input$beat == "All beats") tables() else filter(tables(), beat == input$beat)
-    #   in_beat <- distinct(in_beat, table, concept)
-    #   selected <- if (!opened() && "B01003" %in% in_beat$table) "B01003" else unname(beat_defaults[input$beat])
-    #   if (!selected %in% in_beat$table) selected <- in_beat$table[1]
-    #   opened(TRUE)
-    #   updateSelectizeInput(session, "table", choices = setNames(in_beat$table, in_beat$concept),
-    #                        selected = selected, server = TRUE)
-    # })
-
-    # Everything about the chosen table
-    tbl <- reactive({
-      req(input$table)
-      tables <- tables()
-      concept <- tables$concept[tables$table == input$table][1]
-      leaves <- filter(table_dimensions, table == input$table)
-      list(
-        id = input$table,
-        concept = concept,
-        leaves = leaves,
-        dims = dim_names(input$table, concept),
-        additive = !str_detect(concept, regex(not_additive, ignore_case = TRUE)) && nrow(leaves) > 1 &&
-          !input$table %in% share_of_parent,
-        of_parent = input$table %in% share_of_parent,
-        dollars = str_detect(concept, regex("dollars", ignore_case = TRUE))
-      )
-    })
-
-    # Input ids include the table, so picks never carry over to another table
-    filter_id <- function(d) paste0(tbl()$id, "_", d)
-
-    output$filters_ui <- renderUI({
-      t <- tbl()
-      map(names(t$dims), \(d) {
-        values <- unique(na.omit(t$leaves[[d]]))
-        if (t$additive) {
-          selectizeInput(ns(filter_id(d)), t$dims[[d]], choices = values, multiple = TRUE,
-                         selected = if (d == names(t$dims)[1]) values[1],
-                         options = list(placeholder = "All"))
-        } else {
-          selectInput(ns(filter_id(d)), t$dims[[d]], choices = c("All", values))
-        }
-      })
-    })
-
-    # "Percent of" spells out the group: with Male + Under 5 years picked, the choices are
-    # Everyone, Male (= % of males who are under 5) and Under 5 years (= % of under-5s who are male)
-    output$percent_of_ui <- renderUI({
-      t <- tbl()
-      req(t$additive, length(t$dims) >= 2)
-      p <- compact(picks())
-      groups <- map_chr(names(p), \(d) paste(map_chr(p[setdiff(names(p), d)], \(v) paste(v, collapse = " or ")), collapse = ", "))
-      keep <- groups != ""
-      choices <- c("Everyone" = "table", setNames(names(p)[keep], groups[keep]))
-      selected <- isolate(input$percent_of)
-      selectInput(ns("percent_of"), "Percent of", choices = choices,
-                  selected = if (isTRUE(selected %in% choices)) selected else "table")
-    })
-
-    picks <- reactive(map(set_names(names(tbl()$dims) %||% character()), \(d) input[[filter_id(d)]]))
 
     # Codes that match the picks; skip = a dim to ignore (for the denominator).
     # If the Census publishes that exact group as its own line (e.g. "Male"), use it;
     # otherwise add up the matching leaves.
     matching_codes <- function(skip = NULL) {
-      p <- compact(picks()[setdiff(names(picks()), skip)])
+      p <- compact(sel$picks()[setdiff(names(sel$picks()), skip)])
       if (all(lengths(p) == 1)) {
-        lines <- filter(vars, table == tbl()$id)
+        lines <- filter(vars, table == sel$tbl()$id)
         exact <- lines$name[label_path(lines$label) == paste(unlist(p), collapse = "!!")]
         if (length(exact) == 1) return(exact)
       }
-      leaves <- tbl()$leaves
+      leaves <- sel$tbl()$leaves
       keep <- rep(TRUE, nrow(leaves))
-      for (d in setdiff(names(picks()), skip)) {
-        chosen <- picks()[[d]]
+      for (d in setdiff(names(sel$picks()), skip)) {
+        chosen <- sel$picks()[[d]]
         if (length(chosen) > 0) keep <- keep & leaves[[d]] %in% chosen
       }
       leaves$code[keep]
@@ -231,9 +47,9 @@ home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
 
     # Not additive: the one line whose label is exactly the picks, e.g. "Female!!Bachelor's degree"
     single_code <- reactive({
-      t <- tbl()
+      t <- sel$tbl()
       if (nrow(t$leaves) <= 1) return(c(t$leaves$code, paste0(t$id, "_001"))[1])
-      chosen <- unlist(picks())
+      chosen <- unlist(sel$picks())
       chosen <- chosen[chosen != "All"]
       rows <- filter(vars, table == t$id)
       code <- rows$name[label_path(rows$label) == paste(chosen, collapse = "!!")]
@@ -243,28 +59,24 @@ home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
 
     # The line one level up from the picked line ("Rented > Over 30 Percent" -> "Rented")
     parent_code <- reactive({
-      rows <- filter(vars, table == tbl()$id)
+      rows <- filter(vars, table == sel$tbl()$id)
       path <- label_path(rows$label[rows$name == single_code()])
       rows$name[label_path(rows$label) == str_remove(path, "(^|!!)[^!]*$")]
     })
 
     codes <- reactive({
-      if (!tbl()$additive) return(single_code())
+      if (!sel$tbl()$additive) return(single_code())
       codes <- matching_codes()
       validate(need(length(codes) > 0, "No lines match these picks. Try clearing a filter."))
       codes
     })
 
-    percent_of <- reactive({
-      dims <- names(tbl()$dims)
-      if (tbl()$additive && length(dims) >= 2 && isTRUE(input$percent_of %in% dims)) input$percent_of else "table"
-    })
 
-    shows_percent <- reactive(tbl()$additive || tbl()$of_parent)
+    shows_percent <- reactive(sel$tbl()$additive || sel$tbl()$of_parent)
 
     format_value <- function(x) {
       if (shows_percent()) paste0(round(x, 1), "%")
-      else if (tbl()$dollars) dollar(x)
+      else if (sel$tbl()$dollars) dollar(x)
       else comma(x)
     }
 
@@ -276,8 +88,8 @@ home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
         group_by(across(all_of(group))) |>
         summarise(count = sum(estimate), pct = sum(pct), .groups = "drop") |>
         mutate(denom = count / pct * 100)
-      if (percent_of() != "table") {
-        denom_codes <- matching_codes(skip = percent_of())
+      if (sel$percent_of() != "table") {
+        denom_codes <- matching_codes(skip = sel$percent_of())
         denoms <- data |>
           filter(variable %in% denom_codes) |>
           group_by(across(all_of(group))) |>
@@ -287,7 +99,7 @@ home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
           left_join(denoms, by = group) |>
           mutate(pct = count / denom * 100)
       }
-      if (tbl()$of_parent) {
+      if (sel$tbl()$of_parent) {
         parent_code <- parent_code()
         d <- data |>
           filter(variable == parent_code) |>
@@ -300,9 +112,9 @@ home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
     }
 
     var_label <- reactive({
-      chosen <- unlist(picks())
+      chosen <- unlist(sel$picks())
       chosen <- chosen[chosen != "All"]
-      if (length(chosen) == 0) tbl()$concept else paste0(tbl()$concept, ": ", paste(chosen, collapse = ", "))
+      if (length(chosen) == 0) sel$tbl()$concept else paste0(sel$tbl()$concept, ": ", paste(chosen, collapse = ", "))
     })
 
     # Every town stays on the map; towns with nobody in the table (0 of 0) are gray
@@ -343,7 +155,7 @@ home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
           values = d$value,
           title = str_replace_all(str_wrap(var_label(), 30), "\n", "<br>"),
           labFormat = labelFormat(
-            prefix = if (!tbl()$additive && tbl()$dollars) "$" else "",
+            prefix = if (!sel$tbl()$additive && sel$tbl()$dollars) "$" else "",
             suffix = if (shows_percent()) "%" else "",
             big.mark = ",",
             transform = function(x) sort(x, decreasing = TRUE)))
@@ -375,8 +187,8 @@ home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
 
     # Wording follows the selected variable (ad hoc variables may lack 1-year data)
     output$trend_caption <- renderUI({
-      req(input$table)
-      y1 <- sort(unique(as.numeric(acs1()$year[startsWith(acs1()$variable, paste0(input$table, "_"))])))
+      table_id <- sel$tbl()$id
+      y1 <- sort(unique(as.numeric(acs1()$year[startsWith(acs1()$variable, paste0(table_id, "_"))])))
       y1 <- y1[is.finite(y1)]
 
       if (length(y1) == 0) {
@@ -403,6 +215,4 @@ home_server <- function(id, acs5, acs1, jump_to = reactive(NULL)) {
 
     list(ct = ct, time_series_data = time_series_data, var_label = var_label)
   })
-
-  
 }
