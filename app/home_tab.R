@@ -2,6 +2,10 @@
 home_sidebar_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    tags$div(                        # DO NOT REMOVE THIS EMPTY DIV - fixes the Shiny client error "Unable to find selectize-plugin-a11y plugin"
+      style = "display:none;",       # Forces Selectize dependencies/plugins to load up front rather than dynamically
+      selectizeInput("selectize_preload", label = NULL, choices = NULL)  
+    ),
     h4("Select & Search Variables"),
     # Open menu is exactly as wide as the selected box; long option text wraps instead of widening it
     tags$style(HTML("
