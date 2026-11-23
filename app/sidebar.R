@@ -182,7 +182,7 @@ sidebar_server <- function(id, acs5, active_tab = reactive(NULL), jump_to = reac
         if (t$additive) {
           selectizeInput(ns(filter_id(d)), t$dims[[d]], choices = values, multiple = TRUE,
                          selected = if (d == names(t$dims)[1]) values[1],
-                         options = list(placeholder = "All"))
+                         options = list(placeholder = "All", plugins = list("remove_button")))
         } else {
           selectInput(ns(filter_id(d)), t$dims[[d]], choices = c("All", values))
         }
