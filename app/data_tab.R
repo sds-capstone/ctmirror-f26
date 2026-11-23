@@ -10,6 +10,27 @@ clean_table <- function(d) {
   d
 }
 
+render_num_dt <- function(df) {
+  num_cols   <- which(names(df) %in% c("Estimate", "Percent", "Out of")) - 1
+  text_cols  <- setdiff(seq_along(df) - 1, num_cols)
+  comma_cols <- intersect(c("Estimate", "Out of"), names(df))
+  dt <- DT::datatable(
+    df, rownames = FALSE,
+    selection = "none",
+    options = list(dom = "t", paging = FALSE, ordering = FALSE,
+                   scrollY = "300px", scrollCollapse = TRUE,
+                   columnDefs = list(
+                     list(className = "dt-right", targets = num_cols),
+                     list(className = "dt-left",  targets = text_cols)))
+  )
+  if (length(comma_cols)) {
+    dt <- DT::formatCurrency(dt, comma_cols, currency = "", interval = 3,
+                             mark = ",", digits = 0)
+  }
+  if ("Percent" %in% names(df)) dt <- DT::formatRound(dt, "Percent", digits = 2)
+  dt
+}
+
 data_UI <- function(id) {
   ns <- NS(id)
   tagList(
@@ -20,12 +41,11 @@ data_UI <- function(id) {
     populations of 65,000+ individuals, and 5-Year Estimates, which merges 60-month data for areas of all population sizes."),
     h5("Our Data Products"), p("The first table below is filtered by your variable selection and contains town-level CT data from the most recent 5-year Estimate.
     The second table below is filtered by your variable selection and contains statewide CT data from 1-Year Estimates.")),
-    card(max_height = 350, card_header("Town Data for Geospatial Visualization"), p("Each row represents one Connecticut town from the most recent ACS 5-year estimates. Estimate is the number of people or households (or the median, for medians); Percent is Estimate as a share of Out of."),tableOutput(outputId = NS(id, "town_table"))),
+    card(card_header("Town Data for Geospatial Visualization"), p("Each row represents one Connecticut town from the most recent ACS 5-year estimates. Estimate is the number of people or households (or the median, for medians); Percent is Estimate as a share of Out of."), DT::DTOutput(outputId = NS(id, "town_table"))),
     downloadButton(outputId = NS(id, "download_map_data"), label = "Download Data"),
-    card(max_height = 350, card_header("Statewide Data for Time Series"),
-         p("Each row represents a year for all of Connecticut from the ACS 1-year estimates. There is no 2020 release."), tableOutput(outputId = NS(id, "time_series"))),
-    downloadButton(outputId = NS(id, "download_time_series"), label = "Download Data"),
-
+    card(card_header("Statewide Data for Time Series"),
+         p("Each row represents a year for all of Connecticut from the ACS 1-year estimates. There is no 2020 release."), DT::DTOutput(outputId = NS(id, "time_series"))),
+    downloadButton(outputId = NS(id, "download_time_series"), label = "Download Data")
   )
 }
 
@@ -34,8 +54,8 @@ data_Server <- function(id, ct, time_series_data, var_label) {
     
     town_data <- reactive(ct() |> sf::st_drop_geometry() |> clean_table())
     state_data <- reactive(time_series_data() |> clean_table())
-
-    output$town_table <- renderTable(town_data())
+    
+    output$town_table <- DT::renderDT(render_num_dt(town_data()))
 
     output$download_map_data <- downloadHandler(
       filename = function() {paste0(gsub(" ", "_", var_label()), ".csv")},
@@ -43,7 +63,7 @@ data_Server <- function(id, ct, time_series_data, var_label) {
          write.csv(town_data(), file, row.names = FALSE)}
      ) 
 
-    output$time_series <- renderTable(state_data())
+    output$time_series <- DT::renderDT(render_num_dt(state_data()))
 
     yr_range <- reactive({
       min <- time_series_data() |> pull(year) |> min()
