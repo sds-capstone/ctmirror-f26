@@ -12,7 +12,7 @@ not_additive <- "\\b(median|mean|average|per capita|aggregate|gini|index)\\b"
 share_of_parent <- c("B25140", "B26103", "B26203")
 
 beat_defaults <- c(
-  "All beats" = "B01003", # Total Population
+  "All Beats" = "B01003", # Total Population
   "Demographic" = "B01003", # Total Population
   "Economy" = "B23025", # Employment Status
   "Education" = "B15003", # Educational Attainment
