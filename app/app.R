@@ -101,7 +101,7 @@ ui <- page_sidebar(
       "Advanced", value = "advanced", "Coming soon!"
     ),
     nav_panel(
-      "Find variables", value = "find_variables",
+      "Find Variables", value = "find_variables",
       find_variables_ui("find_variables")
     ),
     nav_panel(

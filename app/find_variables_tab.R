@@ -32,7 +32,8 @@ find_variables_server <- function(id, glossary, vars) {
 
     # Producing the filterable table using the glossary data frame
     output$table <- renderDT({
-      datatable(glossary, filter = "top", selection = "single")
+      datatable(glossary, filter = "top", selection = "single",
+        colnames = str_to_title(names(glossary)))
     })
 
     # Fetch the corresponding table of the row the user clicked on
