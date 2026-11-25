@@ -203,28 +203,27 @@
 \title{Connecticut Mirror Data Dashboard}
 \author{Nicole Choi \and Zoe Khan \and Bayansulu Tulepbayeva \and Ellie
 Zdancewic}
-\date{2026-11-24}
+\date{2026-11-25}
 \begin{document}
 \maketitle
 \begin{abstract}
 The American Community Survey (ACS) is the most detailed public source
-of demographic and economic data for Connecticut, yet reporters rarely
-use it because the Census Bureau's tools are hard to navigate, organize
-data by county instead of by town, and offer little historical context.
-We build an interactive tool, in partnership with Connecticut (CT)
-Mirror, that makes ACS accessible to Connecticut reporters. We restrict
-the ACS to Connecticut and its 169 towns, organize roughly 1,200
-concepts into 14 reporting beats, flag high-priority variables, and
-display historical trends alongside current estimates. Our tool offers a
-model for adapting large federal datasets to the needs of a specific
-newsroom.
+of demographic and economic data for Connecticut, but the Census
+Bureau's existing tools are hard to navigate, offer little historical
+context, and organize data by county in a state that governs at the town
+level. We built an interactive tool, in partnership with The Connecticut
+(CT) Mirror, that makes the ACS data accessible to reporters. We did
+this by restricting the ACS to Connecticut and its 169 towns, organizing
+roughly 1,200 concepts into 14 reporting beats, flagging high-priority
+variables, and displaying historical trends alongside current estimates.
+Our tool offers a model for adapting large federal datasets to the needs
+of a specific newsroom.
 \end{abstract}
 
 
 \section{Introduction}\label{introduction}
 
-\begin{quote}
-The Connecticut (CT) Mirror is a Pulitzer-prize winning non-profit
+The Connecticut (CT) Mirror is a Pulitzer Prize-winning non-profit
 newspaper based in Hartford, Connecticut (Pazniokas 2026). Through
 careful reporting of issues spanning immigration, economics, criminal
 justice, and public health, the CT Mirror fills a crucial gap in state
@@ -232,29 +231,53 @@ policy reporting in Connecticut. Beat reporters frequently integrate
 Connecticut census data in their reporting to provide context on housing
 trends, education outcomes, and demographic statistics. However, CT
 Mirror reporters lack the technical background to make full use of this
-rich dataset. According to CT Mirror reporter Angela Eichhorst,
-reporters ``want to be able to look at historical trends and also
-compare town by town but they don't know how to use the US 5 year census
-data estimates.'' Furthermore some ``reporters don't necessarily know
-all of the data that is available to them to look at'' (Angela Eichhorst
-2026). Therefore, the goals of the CT Mirror Census Data Dashboard are
-twofold: first, to provide a user-friendly simplified tool to engage
-with historical and town-by-town census data, and second, to introduce
-reporters to the full scope of census data available.
-\end{quote}
+rich dataset. In one article published in November, 2026, CT Mirror
+reporter Sasha Allen referenced two specific census demographic
+statistics---Hispanic or Latino Origin, and Receipt of Food Stamps---to
+provide context on voter turnout in the 2026 general election (Allen
+2026). Throughout this paper, we will use these two census variables as
+examples to tie our work back to a real-life use case.
+
+Though some census data is currently being integrated into CT Mirror
+reporting, not all reporters have the technical background to make full
+use of this rich dataset. According to CT Mirror reporter Angela
+Eichhorst, reporters ``want to be able to look at historical trends and
+also compare town by town but they don't know how to use the US 5-year
+census data estimates.'' Furthermore some ``reporters don't necessarily
+know all of the data that is available to them to look at'' (Angela
+Eichhorst 2026). Therefore, the goals of the CT Mirror Census Data
+Dashboard are twofold: first, to provide a user-friendly simplified tool
+to engage with historical and town-by-town census data, and second, to
+introduce reporters to the full scope of census data available.
 
 \subsection{Relevant work}\label{relevant-work}
 
-\begin{quote}
 Due to the high-visibility and government sponsorship of the U.S.
 Census, there already exist several modes of access to Census data. The
-Census Bureau publishes their American Consumer Survey microdata as
-interactive and filterable spreadsheets, accessible on their website.
-However, effective use of these spreadsheets requires significant
-background knowledge on Census variables, and it is not accessible to
-the average user. Additionally, while the raw data is accessible from
-the interactive spreadsheets, there are no visualizations.
-\end{quote}
+Census Bureau publishes its American Consumer Survey microdata as
+interactive and filterable spreadsheets, accessible on its website. (US
+Census Bureau 2026a) However, effective use of these spreadsheets
+requires significant background knowledge on Census variables, and it is
+not accessible to the average user. Additionally, while the raw data is
+accessible from the interactive spreadsheets, there are no
+visualizations.
+
+Alternatively, the Census Bureau publishes a data analytics tool called
+the Census Business Builder (US Census Bureau 2026c). This dashboard,
+geared towards small business owners, visualizes census data across a
+variety of geographies, breaking it down by a primary and secondary
+variable as well as a demographic filter. Figure~\ref{fig-cbb} shows a
+screenshot of the Census Business Builder user interface with one
+primary variable selected at the county level. But while the Census
+Business Builder is comprehensive, it does not fit the specific needs of
+the CTMirror newsroom. The dashboard has a steep learning curve and is
+not intuitive for a non-technical user. Additionally, it is not built
+for a Connecticut-specific use case. The Census Business Builder has
+data on the state, county, and town level. Connecticut, however, doesn't
+make legislative decisions on the county level, making State and Town
+the only necessary geographies for this region (Angela Eichhorst 2026).
+Finally, the Census Business Builder does not provide historical
+time-series data.
 
 \begin{figure}
 
@@ -264,32 +287,13 @@ the interactive spreadsheets, there are no visualizations.
 
 }
 
-\caption{\label{fig-cbb}Census Business Builder User Interface}
+\caption{\label{fig-cbb}Census Business Builder home screen. Note the
+multiple pop-ups and low data-ink ratio.}
 
 \end{figure}%
 
-\begin{quote}
-Alternatively, the Census Bureau publishes a data analytics tool called
-the Census Business Builder (US Census Bureau 2026c). This dashboard,
-geared towards small business owners, visualizes census data across a
-variety of geographies, breaking it down by a primary and secondary
-variable as well as a demographic filter. Figure~\ref{fig-cbb} shows a
-screenshot of the Census Business Builder User-Interface with one
-primary variable selected at the county level. But while the Census
-Business Builder is comprehensive, it does not fit the specific needs of
-the CTMirror newsroom. The dashboard has a steep learning curve and is
-not intuitive for a non-technical user. Additionally, it is not built
-for a Connecticut-specific use case. The Census Business Builder has
-data on the state, county, and town level. Connecticut, however, doesn't
-make legislative decisions on the county-level, making State and Town
-the only necessary geographies for this region (Angela Eichhorst 2026).
-Finally, the Census Business Builder does not provide historical
-time-series data.
-\end{quote}
+\subsection{Our Contribution}\label{our-contribution}
 
-\subsection{Our contribution}\label{our-contribution}
-
-\begin{quote}
 This paper presents a new user-friendly, interactive Census Data tool
 that is specifically tailored to the needs of reporters in Connecticut.
 Unlike existing Census data exploration tools, the Connecticut Mirror
@@ -297,87 +301,401 @@ Data Dashboard delivers a time-series analysis of variable trends over
 time. Additionally, the final dashboard is streamlined to provide
 reporters with the most relevant information as quickly as possible, and
 leaving out details that would contribute to user confusion.
-\end{quote}
 
 \section{Data}\label{sec-data}
 
-\begin{quote}
 The U.S. Census Bureau authors the American Community Survey (ACS), a
 publicly available data set used widely by the government (and other
 stakeholders) to understand citizens and make data-driven decisions. It
 comprises an ongoing survey started in 2005 to collect information about
 demographics, education, economics, housing, and more, from sampled
-households across the country (US Census Bureau 2026a). About 3.5
-million residential addresses are sampled yearly (US Census Bureau
-2026b). There are different types of ACS releases, including 1-Year
-Estimates, which contains 12-month data for areas with populations of
-65,000+ individuals, and 5-Year Estimates, which merges 60-month data
-for areas of all population sizes (US Census Bureau 2026b).
-\end{quote}
-
-\begin{quote}
-All ACS data covers four main categories: Social Characteristics,
-Housing Characteristics, Economic Characteristics, Demographic and
-Housing Estimates (US Census Bureau 2026a). The ACS organizes its data
-as a tree. Concepts form branches and name a broad table topic, such as
-Median Household Income in the Past 12 Months. Each concept divides into
-subconcepts that break the topic down by categories, such as age group,
-race, or sex. The leaves are individual variables, each of which holds
-one estimate. The full ACS contains approximately 1,200 concepts and
-28,500 subconcepts.
-\end{quote}
+households across the country (US Census Bureau 2026a).
+Figure~\ref{fig-survey} shows an example of the raw survey questions
+from 2026. About 3.5 million residential addresses are sampled yearly
+(US Census Bureau 2026b). There are different types of ACS releases,
+including 1-Year Estimates, which contains 12-month data for areas with
+populations of 65,000+ individuals, and 5-Year Estimates, which merges
+60-month data for areas of all population sizes (US Census Bureau
+2026b).
 
 \begin{figure}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{images/ct_pop_map.png}}
+\pandocbounded{\includegraphics[keepaspectratio]{images/survey-image.png}}
 
 }
 
-\caption{\label{fig-towns}Total Population of Towns in Connecticut in
-2024}
+\caption{\label{fig-survey}Informational ACS survey sample from 2026
+(Bureau, n.d.-b). Question 5 asks the survey respondent about
+Hispanic/Latino origin, which corresponds to the census concept B03003.}
 
 \end{figure}%
 
-\begin{quote}
-For this project, we restrict our dataset to Connecticut. We keep only
-records for the state and its 169 towns. The geographic location and
-2024 total population in these towns is displayed in
-Figure~\ref{fig-towns}. This restriction removes the national scope that
-makes the Census Bureau's own tools hard to navigate and aligns the data
-with the geographic units that Connecticut policy uses. The trend of
-total population of Connecticut in over the last 19 years is represented
-by Figure~\ref{fig-ts}.
-\end{quote}
+All ACS data covers four main categories: Social Characteristics,
+Housing Characteristics, Economic Characteristics, Demographic and
+Housing Estimates (US Census Bureau 2026a). The ACS organizes its data
+as a tree (Figure~\ref{fig-treediagram}). Concepts form branches and
+name a broad table topic. Each concept divides into subconcepts that
+break the topic down by categories, such as age group, race, or sex. The
+leaves are individual variables, each of which holds one estimate. The
+full ACS contains approximately 1,200 concepts and 28,500 subconcepts.
 
 \begin{figure}
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{images/ct_pop_ts.png}}
+\pandocbounded{\includegraphics[keepaspectratio]{images/ctmirrortreediagram.png}}
 
 }
 
-\caption{\label{fig-ts}Connecticut Total Population 2005-2024}
+\caption{\label{fig-treediagram}Diagram of the tree structure for the
+ACS5 Concept B22002, ``Receipt of Food Stamps/SNAP in the Past 12 Months
+by Presence of Children Under 18 Years by Household Type for
+Households''. Each leaf-shaped node holds one estimate and one margin of
+error. The tree structure for family structure and Male/Female
+householder is duplicated for the three other branches, producing
+sixteen total estimates for this concept.}
 
 \end{figure}%
 
 \section{Methods}\label{sec-methods}
 
-\begin{quote}
-Methods: What did you actually do? What techniques or methods did you
-employ? What were the specifications for any statistical models you
-used? What software or packages did you use or develop?
-\end{quote}
+Our central goal in creating the Connecticut Mirror Data Dashboard is to
+balance \emph{data accessibility} with \emph{data comprehensibility}.
+Census data is vast and hierarchically structured, and therefore
+requires technical domain knowledge to navigate. However, the core
+audience of the dashboard is non-technical reporters. We produce a
+streamlined user interface for accessing census variables without
+flattening or misrepresenting the data. We enact several methodological
+design choices in order to assist this accessibility-comprehensiveness
+balance.
 
-\section{Results}\label{results}
+\subsection{Data Tagging and Curation}\label{data-tagging-and-curation}
 
-\begin{quote}
-Results: What did you learn about the problem you identified in Section
-1? This is where you put the tables, figures, and analytics by-products
-of your work.
-\end{quote}
+The full 5-Year ACS catalog holds thousands of concepts and subconcepts.
+These concepts are labeled with alphanumeric codes that are not
+meaningful in a reporting context. We first filter our dataset to only
+keep records for the 169 towns in Connecticut. This restriction removes
+the national scope that makes the Census Bureau's own tools hard to
+navigate and aligns the data with the geographic units that Connecticut
+policy uses. We also removed all census concepts that exclusively dealt
+with Puerto Rico, which are irrelevant to Connecticut and simple to
+isolate by their labels. To ease filtering, we manually match all 1,200
+concepts with one or multiple of 12 tags derived from CT Mirror
+reporting beats. For example, we code the concept ``Educational
+Attainment by Employment Status for the Population 25 to 64 Years'' with
+the ``Education'', ``Economy'', and ``Demographic'' beat tags
+(Figure~\ref{fig-qual-tag}).
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{images/qual-tag.png}}
+
+}
+
+\caption{\label{fig-qual-tag}A subset of the 2024 5-Year ACS glossary.
+Concepts are tagged with one or multiple qualitative tags relating to
+their content. The 28,000 census subconcepts are also coded with
+qualitative tags according to their parent concept.}
+
+\end{figure}%
+
+Though qualitatively tagging assists in associating census concepts with
+their reporter beat, it does not reduce the sheer number of ACS concepts
+in each beat. High quantities of variables pose a technical challenge in
+terms of wait times for API calls, and make for an overwhelming visual
+user experience. We pare down the full 1,200 ACS concepts into a list of
+59 ``High Priority'' concepts, ascertained in conversation with CT
+Mirror stakeholders to capture basic demographic statistics such as sex,
+race, age, and citizenship. We ensure each beat covered by the CT Mirror
+is served by at least three high-priority variables to provide breadth
+across subjects.
+
+Using our high-priority variable tags and the glossary of census
+concepts, we make successive API calls for each Connecticut town to
+cache the most important variables of interest. Data caching is the
+primary method for ensuring the dashboard has a fast response time. We
+also integrate our qualitative tagging and data cleaning into the
+dashboard to remain user-friendly and avoid complicated labels.
+
+\subsection{A Filterable Hierarchical
+Structure}\label{a-filterable-hierarchical-structure}
+
+ACS tables are structured as ``trees'' with multiple nested variable
+breakdowns. For example, variables on Household Type and Children are
+nested beneath the Receipt of SNAP Benefits variable. To wrangle this
+complex data hierarchy, we create a flat lookup table that describes the
+shape of the ``tree,'' with each leaf associated with its specific
+dimensions (Figure~\ref{fig-table_dimensions} in appendix).
+Figure~\ref{fig-treediagram-methods} displays the association between
+tree level and its dimension label for concept B22002. We drop parent
+totals and repeated-total rows, so each row in the lookup table
+corresponds to one leaf in the tree. This ensures that each row is a
+non-overlapping category that is safe to sum.
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{images/ctmirrortreediagram_methods.png}}
+
+}
+
+\caption{\label{fig-treediagram-methods}Diagram of the tree structure
+for the 5-Year ACS concept B22002, ``Receipt of Food Stamps/SNAP in the
+Past 12 Months by Presence of Children Under 18 Years by Household Type
+for Households.'' Each sub-level of the tree is mapped to one column in
+the lookup table corresponding to dimension 1, 2, 3, or 4.}
+
+\end{figure}%
+
+We then use a custom function to create human-readable labels
+corresponding with the original subconcept names. This wrangling allows
+us to create a sidebar with the ability to filter by dimension using
+dropdown menus (Figure~\ref{fig-snap-dropdown}). Additional custom
+functions use our lookup table to translate the user's dropdown
+selections into the exact set of relevant leaves. Our dashboard then
+sums those leaves' estimates into the count, percent, and denominator
+columns shown on the visualizations for each town or year.
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{images/SNAP_dropdown.png}}
+
+}
+
+\caption{\label{fig-snap-dropdown}The variable filtering dropdown
+options for concept B22002. Note the separate dropdown options for all
+four levels of the tree. In this example, the user has made a choice for
+the first three, and is choosing to filter to either a Male householder
+or a Female householder.}
+
+\end{figure}%
+
+\subsection{Aggregation Logic for Non-Additive
+Quantities}\label{aggregation-logic-for-non-additive-quantities}
+
+The majority of the ACS census variables are raw counts, meaning they
+can be split into their individual leaves and added back together to
+create estimates for the desired dimensions. A ``Percent of'' filter
+also lets users reframe the denominator (for example, viewing ``Male
+15-17 years old'' as a share out of the whole population, out of all
+men, or out of all 15-17 year olds). However, some variables take
+different forms, such as medians, means, per capita, aggregates, Gini
+inequality scores, and indexes. For non-additive variables, we display
+one line at a time instead of a sum in order to preserve the statistical
+meaning.
+
+\subsection{Software}\label{software}
+
+We produced code in R version 4.5.1. We used the packages \texttt{shiny}
+and \texttt{bslib} to construct an interactive website,
+\texttt{tidycensus} for API calls, \texttt{tigris} for shapefiles, and
+\texttt{leaflet} and \texttt{plotly} for mapping and charting.
+
+\section{Results}\label{sec-results}
+
+The main result of this project is the CT Mirror Census Data Dashboard.
+In this section, we show how beat coding reshapes the ACS for reporters.
+We then walk through each tab of the dashboard and the reporting problem
+it solves. Next, we reproduce the two statistics from our motivating
+article to show how a reporter uses the tool. Finally, we describe how
+we will evaluate the dashboard with CT Mirror reporters.
+
+\subsection{Reorganizing the ACS for a
+Newsroom}\label{reorganizing-the-acs-for-a-newsroom}
+
+Beat coding turns the ACS catalog into lists a reporter can browse.
+Figure~\ref{fig-concepts-table} shows two features of the reorganized
+data. First, the beats differ in size. Demographic, Race, Housing, and
+Economy each contain more than 400 concepts, while Language and Tech
+contain 31 each. This reflects what the ACS measures, not our coding.
+Second, the high-priority list shortens what a reporter sees: Human
+Services shows 6 concepts, not 92. Ten of the eleven reporter-facing
+beats have at least three high-priority concepts. Tech has none, so it
+appears in the beat menu only after a reporter fetches a Tech concept
+from the \textbf{Find Variables} tab.
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{images/concepts-table.png}}
+
+}
+
+\caption{\label{fig-concepts-table}Number of ACS 5-Year concepts (2024
+release) assigned to each beat tag, and the number of high-priority
+concepts within each beat. A concept can carry several tags, so the beat
+counts sum to more than the 1,199 unique concepts. Meta concepts
+describe the survey itself, such as imputation rates, and the dashboard
+excludes them. The 59 high-priority concepts make up 5\% of the
+catalog.}
+
+\end{figure}%
+
+\subsection{Dashboard Overview}\label{dashboard-overview}
+
+The dashboard (Figure~\ref{fig-dashboard-overview}) has a shared
+sidebar, multiple tabs, and a placeholder tab for future features.
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{images/dashboard-overview.png}}
+
+}
+
+\caption{\label{fig-dashboard-overview}The CT Mirror Census Data
+Dashboard, showing the Home tab with Hispanic or Latino Origin selected.
+The sidebar on the left holds the beat, variable, and filter selections,
+and every tab reads from it. The Home tab shows a town map (top) and a
+statewide trend (bottom), each with a caption naming its data source. In
+contrast, the Census Business Builder Figure~\ref{fig-cbb} asks the user
+to choose an industry, a geography level, and a primary variable before
+it shows any data.}
+
+\end{figure}%
+
+\textbf{Sidebar:} The reporter picks a beat and then a variable from
+searchable dropdowns. Each beat opens on a default variable; for
+example, the Human Services beat opens on SNAP receipt. Below these, the
+sidebar builds one filter per table dimension. A Percent of control sets
+the denominator. For example, with Male and Under 5 years selected, the
+reporter can choose among the share of everyone, the share of males who
+are under 5, and the share of under-5s who are male. Medians and indexes
+cannot be added up.
+
+\textbf{Home:} This tab serves the first goal of the project: comparing
+towns and observing trends. A choropleth map that shades each area by
+its value displays the selected variable for all 169 towns. Hovering
+over a town shows the percentage with its count and total, which lets
+reporters tell a large share of a small town apart from a large share of
+a large city. Below the map, a line chart plots the same selection
+statewide from 2005 to 2024.
+
+\textbf{Find Variables:} This tab lists all 1,199 concepts with their
+beat and priority tags in a filterable table. Clicking \textbf{Make
+custom API call} on any row fetches that concept from the census API and
+adds it to the sidebar. Reporters can reach the whole catalog of
+variables, which helps this tab fulfill our second goal of showing
+reporters the full scope of what the ACS offers.
+
+\textbf{Data:} This tab shows the town and statewide tables behind the
+current selection, with CSV downloads. A reporter can check a figure or
+send it to a graphics editor without leaving the dashboard. A fourth
+tab, \textbf{Advanced}, is a placeholder for future features, namely a
+comparative time series that is currently in progress.
+
+\subsection{Application}\label{application}
+
+To test whether the dashboard supports real reporting, we reproduce the
+two statistics that CT Mirror reporter Sasha Allen uses for context on
+the voter turnout in the 2026 general election (Allen 2026).
+
+To understand the Hispanic/Latino demographic in CT, a reporter can
+select the Race beat and then Hispanic or Latino Origin (concept B03003)
+and display the percentages on the map (Figure~\ref{fig-hispanic-map}).
+Bridgeport (44.8\%) and Hartford (44.5\%) have the highest shares in the
+state. New Britain, East Hartford, Windham, Waterbury, and Meriden all
+exceed 38\%. The median town, by contrast, is 6.8\% Hispanic or Latino,
+and 120 of 169 towns fall below 10\%. This concentration disappears at
+coarser geographies. The Census Bureau now reports Connecticut by nine
+planning regions, and averaging Bridgeport with its suburbs would hide
+the cities that matter most to a voter turnout story (Federal Register
+2022).
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{images/hispanic-map.png}}
+
+}
+
+\caption{\label{fig-hispanic-map}Percent of residents who identify as
+Hispanic or Latino (ACS table B03003), by town, from the ACS 2020-2024
+5-Year estimates. Darker shades correspond to higher percentages.
+Bridgeport, outlined in red, has the highest share in the state at
+44.8\% (66,803 of 149,153 residents), with Hartford close behind at
+44.5\%. Most towns are much lower: the median town is 6.8\%, and 120 of
+169 towns are below 10\%.}
+
+\end{figure}%
+
+A reporter can also investigate SNAP receipt similarly: they can select
+the Human Services beat and open Receipt of Food Stamps/SNAP (concept
+B22002). Statewide, the share of households receiving SNAP more than
+doubles from 5.4\% in 2005 to 12.0\% in 2012, after the 2008 recession
+(Figure~\ref{fig-snap-ts}). It peaks at 13.1\% in 2016, falls to 11.1\%
+in 2019, and stays near 11.9\% from 2021 to 2024. The map adds the local
+picture: in 2020-2024, receipt is highest in Hartford (37.2\%),
+Waterbury (29.5\%), and Windham (28.3\%), and Bridgeport's rate of
+23.7\% is far above the statewide rate.
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{images/snap-ts.png}}
+
+}
+
+\caption{\label{fig-snap-ts}Percent of Connecticut households who have
+received Food Stamps/SNAP in the past year (ACS concept B22002),
+statewide, 2005-2024, from ACS 1-Year estimates. The y-axis shows the
+percent of households, and the x-axis shows the survey year. The rate
+more than doubles between 2005 and 2012, peaks at 13.1\% in 2016, and
+holds near 12\% after 2021. 2020 is missing because the Census Bureau
+did not publish standard 1-year estimates that year (Bureau, n.d.-a).}
+
+\end{figure}%
+
+The statewide line and the town map answer different questions. The line
+shows how Connecticut changes over time, and the map shows where each
+town stands now. The dashboard does not yet show how a single town's
+trend compares with the state's. We return to this in future works.
+
+In both applications above, the reporter reaches the desired statistic
+in two or three selections, using beat and concept names rather than
+complicated codes. The dashboard also gives further context to the
+article: how each town compares with the rest of the state, and how the
+current statewide value fits a 20-year trend. Neither the Census
+Bureau's table nor the Census Business Builder shows both views
+together.
+
+\subsection{Planned Evaluation with CT Mirror
+Reporters}\label{planned-evaluation-with-ct-mirror-reporters}
+
+We have not yet tested the dashboard with its intended users. Before the
+final draft, we plan to run a usability study with 4 CT Mirror
+reporters. In sessions of about 20 to 30 minutes, each reporter
+completes a set of tasks drawn from real reporting needs, for example:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Town comparison:} ``Which five towns have the highest share of
+  Hispanic or Latino residents?''
+\item
+  \textbf{Historical trend:} ``How has the statewide share of households
+  receiving SNAP changed since 2010?''
+\item
+  \textbf{Variable discovery:} ``Find one variable on your beat that you
+  have not used before, and add it to the map.'' For each task, we
+  record whether the reporter completes it and how long it takes. If
+  time allows, we compare the results with the same tasks on
+  data.census.gov. We end each session with open-ended questions about
+  what is confusing, what is missing, and whether the reporter would use
+  the dashboard in their own work.
+\end{enumerate}
 
 \section{Conclusion}\label{conclusion}
 
@@ -394,20 +712,35 @@ about what you did.
 
 \subsection{Final thoughts}\label{final-thoughts}
 
+\section{Appendix}\label{appendix}
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{images/table_dimensions.png}}
+
+}
+
+\caption{\label{fig-table_dimensions}An excerpt of
+\texttt{table\_dimensions}, filtered to one concept, B2202. Note the
+sixteen rows corresponding to unique paths to reach the sixteen leaf
+nodes of the tree. The dimension columns are mapped to levels on the
+concept tree, with NAs filling in dimensions where the path is shorter.}
+
+\end{figure}%
+
 \section{Ethical statement}\label{ethical-statement}
 
-\begin{quote}
 Drawing on what you have learned about data science ethics in this
 class, discuss any ethical considerations in your project. For some
 projects, this statement could be quite short (one paragraph may
 suffice). For other projects, more detail may be needed (no more than 2
-pages).
-
-Be expansive and creative in your thinking about \textbf{possible}
-ethical considerations. One way to do this assignment poorly would be to
-write a short statement asserting that there are no ethical
-considerations, only to have me think of several fairly obvious ones.
-\end{quote}
+pages). \textgreater{} \textgreater{} Be expansive and creative in your
+thinking about \textbf{possible} ethical considerations. One way to do
+this assignment poorly would be to write a short statement asserting
+that there are no ethical considerations, only to have me think of
+several fairly obvious ones.
 
 \section{Acknowledgements}\label{acknowledgements}
 
@@ -421,8 +754,28 @@ like to acknowledge?
 
 \protect\phantomsection\label{refs}
 \begin{CSLReferences}{1}{1}
+\bibitem[\citeproctext]{ref-allen_ct_2026}
+Allen, Sasha. 2026. {``In {CT} Towns Affected Heavily by {Trump}
+Policies, Voter Turnout Grew.''} In \emph{CT Mirror}.
+\url{https://ctmirror.org/2026/11/06/in-ct-towns-affected-heavily-by-trump-policies-voter-turnout-grew/}.
+
 \bibitem[\citeproctext]{ref-angela_eichhorst_connecticut_2026}
 Angela Eichhorst. 2026. \emph{Connecticut {Mirror} {Project} {Video}}.
+
+\bibitem[\citeproctext]{ref-bureau_changes_nodate}
+Bureau, US Census. n.d.-a. {``Changes for 2020 {ACS} 1-{Year}
+{Estimates}.''} In \emph{Census.gov}. Accessed November 24, 2026.
+\url{https://www.census.gov/programs-surveys/acs/technical-documentation/user-notes/2021-02.html}.
+
+\bibitem[\citeproctext]{ref-bureau_sample_nodate}
+Bureau, US Census. n.d.-b. {``Sample {ACS} \& {PRCS} {Forms} and
+{Instructions}.''} In \emph{Census.gov}. Accessed November 24, 2026.
+\url{https://www.census.gov/programs-surveys/acs/about/forms-and-instructions.html}.
+
+\bibitem[\citeproctext]{ref-federal_register_change_2022}
+Federal Register. 2022. {``Change to {County}-{Equivalents} in the
+{State} of {Connecticut}.''} In \emph{Federal Register}.
+\url{https://www.federalregister.gov/documents/2022/06/06/2022-12063/change-to-county-equivalents-in-the-state-of-connecticut}.
 
 \bibitem[\citeproctext]{ref-pazniokas_ct_2026}
 Pazniokas, Mark. 2026. {``{CT} {Mirror} Wins First {Pulitzer} {Prize}
